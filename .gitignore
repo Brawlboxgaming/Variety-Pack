@@ -38,3 +38,5 @@ files/
 packBuild/
 
 VP.code-workspace
+
+build/
