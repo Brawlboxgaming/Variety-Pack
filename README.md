@@ -2,7 +2,7 @@
 Variety Pack is a Mario Kart Wii distribution which was build on the engine [Pulsar](https://github.com/MelgMKW/Pulsar), created by MelgMKW. If you would like to see further information about the distribution, please visit the wiki page: [Variety Pack](https://wiki.tockdom.com/wiki/Variety_Pack).
 
 
-# Pulsar (Section from Pulsar's README)
+# Pulsar
 Pulsar is a Mario Kart Wii Kamek-Based engine to create CT distributions. It comes with its own software to aid in building custom distributions, and multiple quality of life features:
 
 
