@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+.vscode/
+
+files/
+
+packBuild/
+
+VP.code-workspace
