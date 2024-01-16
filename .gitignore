@@ -42,3 +42,5 @@ VP.code-workspace
 build/
 
 BuildCode.bat
+
+launcher/
