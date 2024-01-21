@@ -20,7 +20,7 @@ kmCall(0x807ef50c, CustomItemWindow);
 void CustomItemBalloon(ControlLoader *loader, const char *folderName, const char *ctrName, const char *variant, const char **animNames){
     const VP::Gamemode gamemode = VP::GetGamemode();
     if (gamemode != VP::RACESETTING_MODE_NONE){
-        ctrName = "chase_iNOR";
+        ctrName = "chase_iNOR"; // I still want default icons for the ItemBalloon even in other gamemodes, but custom icons in the ItemWindow.
     }
     loader->Load(folderName, ctrName, variant, animNames);
 }
