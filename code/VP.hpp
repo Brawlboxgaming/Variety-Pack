@@ -1,6 +1,7 @@
 #include <kamek.hpp>
 #include <Pulsar/PulsarSystem.hpp>
 #include <Pulsar/Settings/Settings.hpp>
+#include <game/Item/Obj/ItemObj.hpp>
 
 extern u32 RKNetController_Search1;
 extern u32 RKNetController_Search2;
@@ -11,8 +12,7 @@ extern u32 RKNetController_Search6;
 extern u32 RKNetController_Search7;
 extern u32 RKNetController_Search8;
 
-extern u32 Bombtimer_1;
-extern u32 Bombtimer_2;
+extern void func_807b7104(Item::Obj* obj, UnkType r4, UnkType r5, UnkType r6, float f1, float f2, float f3);
 
 class VP : public Pulsar::System {
 public:
@@ -48,11 +48,18 @@ public:
     static Gamemode GetGamemode();
 
     u8 SetPackROOMMsg() override {
-        hostMode = static_cast<VP::Gamemode>(Pulsar::Settings::GetSettingValue(Pulsar::SETTINGSTYPE_RACE, VP::SETTINGRACE_SCROLLER_MODE));
+        hostMode = static_cast<VP::Gamemode>(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, VP::SETTINGRACE_SCROLLER_MODE));
         return hostMode;
     };
     void ParsePackROOMMsg(u8 msg) override {
         hostMode = static_cast<VP::Gamemode>(msg);
     };
     void AfterInit() override;
+
+    static inline void CacheInvalidateAddress(register u32 address) {
+        asm(dcbst 0, address;);
+        asm(sync;);
+        asm(icbi 0, address;);
+        asm(isync;);
+    }
 };
