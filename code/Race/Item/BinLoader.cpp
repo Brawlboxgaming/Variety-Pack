@@ -33,4 +33,4 @@ void *GetCustomDriverParam(ArchiveRoot *archive, ArchiveSource type, const char 
     return archive->GetFile(type, name, length);
 }
 
-kmCall(0x80591ed0, GetCustomDriverParam);
+kmCall(0x80591a54, GetCustomDriverParam);
