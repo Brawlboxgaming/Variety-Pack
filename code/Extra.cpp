@@ -66,13 +66,24 @@ void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char 
 }
 kmCall(0x807a0160, LoadCustomFakeItemboxes);
 
-void MotionSensorBombs(){
+void MotionSensorBombs1(Item::ObjBomb* obj){
+    int timer = 300;
     if (VP::GetGamemode() != VP::RACESETTING_MODE_NONE){
-        Bombtimer_1 = 0x38000FFF;
-        Bombtimer_2 = 0x38000FFF;
-        return;
+        timer = 4095;
     }
-    Bombtimer_1 = 0x3800012c;
-    Bombtimer_2 = 0x3800005a;
+    obj->timer = timer;
+    obj->Item::Obj::SpawnModel();
 }
-static RaceLoadHook MotionSensorBombsHook(MotionSensorBombs);
+kmCall(0x807a5be4, MotionSensorBombs1);
+kmWrite32(0x807a5c10, 0x60000000); // nope the store of the timer
+
+void MotionSensorBombs2(Item::ObjBomb* obj, UnkType r4, UnkType r5, UnkType r6, float f1, float f2, float f3){
+    func_807b7104(obj, r4, r5, r6, f1, f2, f3);
+    int timer = 90;
+    if (VP::GetGamemode() != VP::RACESETTING_MODE_NONE){
+        timer = 4095;
+    }
+    obj->timer = timer;
+}
+kmCall(0x807a4ac4, MotionSensorBombs2);
+kmWrite32(0x807a4acc, 0x60000000); // nop the store of the timer
