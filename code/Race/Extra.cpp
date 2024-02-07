@@ -1,16 +1,19 @@
 #include <kamek.hpp>
-#include <game/UI/Ctrl/CtrlRace/CtrlRaceResult.hpp>
-#include <game/Race/RaceData.hpp>
-#include <game/Race/RaceInfo/RaceInfo.hpp>
-#include <game/UI/SectionMgr/SectionMgr.hpp>
+#include <MarioKartWii/UI/Ctrl/CtrlRace/CtrlRaceResult.hpp>
+#include <MarioKartWii/Race/RaceData.hpp>
+#include <MarioKartWii/Race/RaceInfo/RaceInfo.hpp>
+#include <MarioKartWii/UI/SectionMgr/SectionMgr.hpp>
+#include <MarioKartWii/UI/Ctrl/CtrlRace/CtrlRaceGhostDiffTime.hpp>
 #include <core/rvl/devfs/isfs.hpp>
 #include <core/rvl/os/OS.hpp>
-#include <Pulsar/Race/200ccParams.hpp>
-#include <game/GlobalFunctions.hpp>
-#include <Pulsar/SlotExpansion/CupsDef.hpp>
-#include <game/Item/Obj/Bomb.hpp>
+#include <PulsarEngine/Race/200ccParams.hpp>
+#include <MarioKartWii/GlobalFunctions.hpp>
+#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <MarioKartWii/Item/Obj/Bomb.hpp>
 #include <VP.hpp>
 
+namespace VP {
+namespace Race{
 // Don't Lose VR When Disconnecting
 kmWrite32(0x80856560, 0x60000000);
 
@@ -30,15 +33,12 @@ void VSPointsSystem(){
             else{
                 const Timer *finishTimer = raceinfo->players[playerId]->raceFinishTime;
                 const Timer *finishTimerOf1st = raceinfo->players[playerIdOf1st]->raceFinishTime;
+                if (finishTimer->isActive){
+                    const Timer diffTimer = CtrlRaceGhostDiffTime::SubtractTimers(*finishTimer, *finishTimerOf1st);
+                    const s32 diff = diffTimer.seconds + diffTimer.minutes*60;
 
-                const s32 finishTime = finishTimer->milliseconds + finishTimer->seconds*1000 + finishTimer->minutes*60000;
-                if (finishTime != 0){
-                    const s32 finishTimeOf1st = finishTimerOf1st->milliseconds + finishTimerOf1st->seconds*1000 + finishTimerOf1st->minutes*60000;
-
-                    const s32 timeDifference = (finishTime - finishTimeOf1st)/1000;
-
-                    if (timeDifference < 30){
-                        scenario.players[playerId].score = scenario.players[playerId].previousScore + (30-timeDifference);
+                    if (diff < 30){
+                        scenario.players[playerId].score = scenario.players[playerId].previousScore + (30-diff);
                     }
                     else{
                         scenario.players[playerId].score = scenario.players[playerId].previousScore;
@@ -59,7 +59,7 @@ void LoadOriginalItemboxes(g3d::ResFile &file, ArchiveSource type, const char *b
 kmCall(0x8081fdb4, LoadOriginalItemboxes);
 
 void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName){
-    if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && VP::GetGamemode() != VP::RACESETTING_MODE_NONE){
+    if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && System::GetGamemode() != System::RACESETTING_MODE_NONE){
         brresName = "itemBoxNiseRtpaVP.brres";
     }
     ModelDirector::BindBRRES(file, type, brresName);
@@ -68,7 +68,7 @@ kmCall(0x807a0160, LoadCustomFakeItemboxes);
 
 void MotionSensorBombs1(Item::ObjBomb* obj){
     int timer = 300;
-    if (VP::GetGamemode() != VP::RACESETTING_MODE_NONE){
+    if (System::GetGamemode() != System::RACESETTING_MODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;
@@ -80,10 +80,12 @@ kmWrite32(0x807a5c10, 0x60000000); // nope the store of the timer
 void MotionSensorBombs2(Item::ObjBomb* obj, UnkType r4, UnkType r5, UnkType r6, float f1, float f2, float f3){
     func_807b7104(obj, r4, r5, r6, f1, f2, f3);
     int timer = 90;
-    if (VP::GetGamemode() != VP::RACESETTING_MODE_NONE){
+    if (System::GetGamemode() != System::RACESETTING_MODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;
 }
 kmCall(0x807a4ac4, MotionSensorBombs2);
 kmWrite32(0x807a4acc, 0x60000000); // nop the store of the timer
+} // namespace Race
+} // namespace VP

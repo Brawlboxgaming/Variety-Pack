@@ -1,9 +1,11 @@
 #include <kamek.hpp>
-#include <game/Kart/KartCollision.hpp>
-#include <game/Item/ItemManager.hpp>
-#include <game/Item/ItemBehaviour.hpp>
-#include <Pulsar/SlotExpansion/CupsDef.hpp>
+#include <MarioKartWii/Kart/KartCollision.hpp>
+#include <MarioKartWii/Item/ItemManager.hpp>
+#include <MarioKartWii/Item/ItemBehaviour.hpp>
+#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
 
+namespace VP {
+namespace Race {
 int UseItem(Kart::Collision *kartCollision, ItemId id){
     u8 playerId = kartCollision->link.GetPlayerIdx();
     Item::Manager::sInstance->players[playerId].inventory.currentItemCount++;
@@ -52,6 +54,6 @@ kmWrite32(0x80790EF0, 0x39800001);
 kmWrite32(0x80790EF4, 0x39600001);
 kmWrite32(0x80790EF8, 0x39400001);
 kmWrite32(0x80790EFC, 0x39200001);
-
-
 //kmWritePointer(0x808b54e8, AllFeathersCanLand); Already done in Pulsar
+} // namespace Race
+} // namespace VP

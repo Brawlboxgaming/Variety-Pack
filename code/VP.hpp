@@ -1,7 +1,7 @@
 #include <kamek.hpp>
-#include <Pulsar/PulsarSystem.hpp>
-#include <Pulsar/Settings/Settings.hpp>
-#include <game/Item/Obj/ItemObj.hpp>
+#include <PulsarEngine/PulsarSystem.hpp>
+#include <PulsarEngine/Settings/Settings.hpp>
+#include <MarioKartWii/Item/Obj/ItemObj.hpp>
 
 extern u32 RKNetController_Search1;
 extern u32 RKNetController_Search2;
@@ -14,7 +14,8 @@ extern u32 RKNetController_Search8;
 
 extern void func_807b7104(Item::Obj* obj, UnkType r4, UnkType r5, UnkType r6, float f1, float f2, float f3);
 
-class VP : public Pulsar::System {
+namespace VP {
+class System : public Pulsar::System {
 public:
     enum Gamemode{
         RACESETTING_MODE_NORMAL = 0x0,
@@ -43,16 +44,16 @@ public:
     u8 invincibilityTimer[12];
     Gamemode hostMode;
 
-    static System *Create(); //My Create function, needs to return Pulsar
-    static VP *GetsInstance(){return (VP*)sInstance;} //for ease of use, optional
+    static Pulsar::System *Create(); //My Create function, needs to return Pulsar
+    static System *GetsInstance(){return static_cast<System *>(sInstance);} //for ease of use, optional
     static Gamemode GetGamemode();
 
     u8 SetPackROOMMsg() override {
-        hostMode = static_cast<VP::Gamemode>(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, VP::SETTINGRACE_SCROLLER_MODE));
+        hostMode = static_cast<System::Gamemode>(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, System::SETTINGRACE_SCROLLER_MODE));
         return hostMode;
     };
     void ParsePackROOMMsg(u8 msg) override {
-        hostMode = static_cast<VP::Gamemode>(msg);
+        hostMode = static_cast<System::Gamemode>(msg);
     };
     void AfterInit() override;
 
@@ -63,3 +64,4 @@ public:
         asm(isync;);
     }
 };
+} // namespace VP

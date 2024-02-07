@@ -1,11 +1,13 @@
 #include <Common/ButtonCheck.hpp>
 #include <core/rvl/os/OS.hpp>
 
-bool CheckButton(Buttons specific, u16 inputs){
+namespace VP {
+namespace Button {
+bool Check(u32 specific, u16 inputs){
     return (inputs & specific) != 0;
 }
 
-bool CheckButtonPressed(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, u32 button){
+bool CheckPressed(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, u32 button){
     u16 inputs = controllerHolder->inputStates[0].buttonRaw;
     if (onlyCheckNewButtons) inputs = (inputs & ~controllerHolder->inputStates[1].buttonRaw);
 
@@ -13,78 +15,77 @@ bool CheckButtonPressed(Input::RealControllerHolder *controllerHolder, Controlle
     float verticalCStick;
     if (controllerType == WHEEL){
         switch (button){
-            case BUTTON_DPAD_LEFT: return CheckButton(WHEEL_DPAD_LEFT, inputs);
-            case BUTTON_DPAD_RIGHT: return CheckButton(WHEEL_DPAD_RIGHT, inputs);
-            case BUTTON_DPAD_DOWN: return CheckButton(WHEEL_DPAD_DOWN, inputs);
-            case BUTTON_DPAD_UP: return CheckButton(WHEEL_DPAD_UP, inputs);
-            case BUTTON_A: return CheckButton(WHEEL_A, inputs);
-            case BUTTON_B: return CheckButton(WHEEL_B, inputs);
-            case BUTTON_MINUS: return CheckButton(WHEEL_MINUS, inputs);
-            case BUTTON_PLUS: return CheckButton(WHEEL_PLUS, inputs);
-            case BUTTON_HOME: return CheckButton(WHEEL_HOME, inputs);
-            case BUTTON_1: return CheckButton(WHEEL_1, inputs);
-            case BUTTON_2: return CheckButton(WHEEL_2, inputs);
+            case BUTTON_DPAD_LEFT: return Check(WPAD::WPAD_BUTTON_LEFT, inputs);
+            case BUTTON_DPAD_RIGHT: return Check(WPAD::WPAD_BUTTON_RIGHT, inputs);
+            case BUTTON_DPAD_DOWN: return Check(WPAD::WPAD_BUTTON_DOWN, inputs);
+            case BUTTON_DPAD_UP: return Check(WPAD::WPAD_BUTTON_UP, inputs);
+            case BUTTON_A: return Check(WPAD::WPAD_BUTTON_A, inputs);
+            case BUTTON_B: return Check(WPAD::WPAD_BUTTON_B, inputs);
+            case BUTTON_MINUS: return Check(WPAD::WPAD_BUTTON_MINUS, inputs);
+            case BUTTON_PLUS: return Check(WPAD::WPAD_BUTTON_PLUS, inputs);
+            case BUTTON_HOME: return Check(WPAD::WPAD_BUTTON_HOME, inputs);
+            case BUTTON_1: return Check(WPAD::WPAD_BUTTON_1, inputs);
+            case BUTTON_2: return Check(WPAD::WPAD_BUTTON_2, inputs);
             default: return false;
         }
     }
     else if (controllerType == NUNCHUCK){
         switch (button){
-            case BUTTON_DPAD_LEFT: return CheckButton(NUNCHUCK_DPAD_LEFT, inputs);
-            case BUTTON_DPAD_RIGHT: return CheckButton(NUNCHUCK_DPAD_RIGHT, inputs);
-            case BUTTON_DPAD_DOWN: return CheckButton(NUNCHUCK_DPAD_DOWN, inputs);
-            case BUTTON_DPAD_UP: return CheckButton(NUNCHUCK_DPAD_UP, inputs);
-            case BUTTON_A: return CheckButton(NUNCHUCK_A, inputs);
-            case BUTTON_B: return CheckButton(NUNCHUCK_B, inputs);
-            case BUTTON_MINUS: return CheckButton(NUNCHUCK_MINUS, inputs);
-            case BUTTON_PLUS: return CheckButton(NUNCHUCK_PLUS, inputs);
-            case BUTTON_HOME: return CheckButton(NUNCHUCK_HOME, inputs);
-            case BUTTON_1: return CheckButton(NUNCHUCK_1, inputs);
-            case BUTTON_2: return CheckButton(NUNCHUCK_2, inputs);
-            case BUTTON_C: return CheckButton(NUNCHUCK_C, inputs);
-            case BUTTON_Z: return CheckButton(NUNCHUCK_Z, inputs);
+            case BUTTON_DPAD_LEFT: return Check(WPAD::WPAD_BUTTON_LEFT, inputs);
+            case BUTTON_DPAD_RIGHT: return Check(WPAD::WPAD_BUTTON_RIGHT, inputs);
+            case BUTTON_DPAD_DOWN: return Check(WPAD::WPAD_BUTTON_DOWN, inputs);
+            case BUTTON_DPAD_UP: return Check(WPAD::WPAD_BUTTON_UP, inputs);
+            case BUTTON_A: return Check(WPAD::WPAD_BUTTON_A, inputs);
+            case BUTTON_B: return Check(WPAD::WPAD_BUTTON_B, inputs);
+            case BUTTON_MINUS: return Check(WPAD::WPAD_BUTTON_MINUS, inputs);
+            case BUTTON_PLUS: return Check(WPAD::WPAD_BUTTON_PLUS, inputs);
+            case BUTTON_HOME: return Check(WPAD::WPAD_BUTTON_HOME, inputs);
+            case BUTTON_1: return Check(WPAD::WPAD_BUTTON_1, inputs);
+            case BUTTON_2: return Check(WPAD::WPAD_BUTTON_2, inputs);
+            case BUTTON_C: return Check(WPAD::WPAD_BUTTON_C, inputs);
+            case BUTTON_Z: return Check(WPAD::WPAD_BUTTON_Z, inputs);
             default: return false;
         }
         
     }
     else if (controllerType == CLASSIC){
-        Input::WiiController *wiiController = (Input::WiiController*) controllerHolder->curController;
+        Input::WiiController *wiiController = static_cast<Input::WiiController*>(controllerHolder->curController);
         horizontalCStick = wiiController->kpadStatus[0].extStatus.cl.stickR.x;
         verticalCStick = wiiController->kpadStatus[0].extStatus.cl.stickR.y;
         switch (button){
-            case BUTTON_DPAD_LEFT: return CheckButton(CLASSIC_DPAD_LEFT, inputs);
-            case BUTTON_DPAD_RIGHT: return CheckButton(CLASSIC_DPAD_RIGHT, inputs) || CheckButton(CLASSIC_L, inputs);
-            case BUTTON_DPAD_DOWN: return CheckButton(CLASSIC_DPAD_DOWN, inputs);
-            case BUTTON_DPAD_UP: return CheckButton(CLASSIC_DPAD_UP, inputs);
-            case BUTTON_A: return CheckButton(CLASSIC_A, inputs);
-            case BUTTON_B: return CheckButton(CLASSIC_B, inputs) || CheckButton(CLASSIC_PLUS, inputs);
-            case BUTTON_X: return CheckButton(CLASSIC_X, inputs);
-            case BUTTON_Y: return CheckButton(CLASSIC_Y, inputs);
-            case BUTTON_MINUS: return CheckButton(CLASSIC_MINUS, inputs);
-            case BUTTON_HOME: return CheckButton(CLASSIC_HOME, inputs);
-            case BUTTON_R: return CheckButton(CLASSIC_R, inputs);
-            case BUTTON_ZL: return CheckButton(CLASSIC_ZL, inputs);
-            case BUTTON_Z: return CheckButton(CLASSIC_Z, inputs);
+            case BUTTON_DPAD_LEFT: return Check(WPAD::WPAD_CL_BUTTON_LEFT, inputs);
+            case BUTTON_DPAD_RIGHT: return Check(WPAD::WPAD_CL_BUTTON_RIGHT, inputs) || Check(WPAD::WPAD_CL_TRIGGER_L, inputs);
+            case BUTTON_DPAD_DOWN: return Check(WPAD::WPAD_CL_BUTTON_DOWN, inputs);
+            case BUTTON_DPAD_UP: return Check(WPAD::WPAD_CL_BUTTON_UP, inputs);
+            case BUTTON_A: return Check(WPAD::WPAD_CL_BUTTON_A, inputs);
+            case BUTTON_B: return Check(WPAD::WPAD_CL_BUTTON_B, inputs) || Check(WPAD::WPAD_CL_BUTTON_PLUS, inputs);
+            case BUTTON_X: return Check(WPAD::WPAD_CL_BUTTON_X, inputs);
+            case BUTTON_Y: return Check(WPAD::WPAD_CL_BUTTON_Y, inputs);
+            case BUTTON_MINUS: return Check(WPAD::WPAD_CL_BUTTON_MINUS, inputs);
+            case BUTTON_HOME: return Check(WPAD::WPAD_CL_BUTTON_HOME, inputs);
+            case BUTTON_R: return Check(WPAD::WPAD_CL_TRIGGER_R, inputs);
+            case BUTTON_ZL: return Check(WPAD::WPAD_CL_TRIGGER_ZL, inputs);
+            case BUTTON_Z: return Check(WPAD::WPAD_CL_TRIGGER_ZR, inputs);
             default: return false;
         }
     }
     else{
-        // Doesn't work
-        Input::GCNController *gcnController = (Input::GCNController*) controllerHolder->curController;
+        Input::GCNController *gcnController = static_cast<Input::GCNController*>(controllerHolder->curController);
         horizontalCStick = gcnController->padStatus.cStickX;
         verticalCStick = gcnController->padStatus.cStickY;
         switch (button){
-            case BUTTON_DPAD_LEFT: return CheckButton(GCN_DPAD_LEFT, inputs);
-            case BUTTON_DPAD_RIGHT: return CheckButton(GCN_DPAD_RIGHT, inputs);
-            case BUTTON_DPAD_DOWN: return CheckButton(GCN_DPAD_DOWN, inputs);
-            case BUTTON_DPAD_UP: return CheckButton(GCN_DPAD_UP, inputs);
-            case BUTTON_A: return CheckButton(GCN_A, inputs);
-            case BUTTON_B: return CheckButton(GCN_B, inputs);
-            case BUTTON_X: return CheckButton(GCN_X, inputs);
-            case BUTTON_Y: return CheckButton(GCN_Y, inputs);
-            case BUTTON_Z: return CheckButton(GCN_Z, inputs);
-            case BUTTON_PLUS: return CheckButton(GCN_START, inputs);
-            case BUTTON_L: return CheckButton(GCN_L, inputs);
-            case BUTTON_R: return CheckButton(GCN_R, inputs);
+            case BUTTON_DPAD_LEFT: return Check(PAD::PAD_BUTTON_LEFT, inputs);
+            case BUTTON_DPAD_RIGHT: return Check(PAD::PAD_BUTTON_RIGHT, inputs);
+            case BUTTON_DPAD_DOWN: return Check(PAD::PAD_BUTTON_DOWN, inputs);
+            case BUTTON_DPAD_UP: return Check(PAD::PAD_BUTTON_UP, inputs);
+            case BUTTON_A: return Check(PAD::PAD_BUTTON_A, inputs);
+            case BUTTON_B: return Check(PAD::PAD_BUTTON_B, inputs);
+            case BUTTON_X: return Check(PAD::PAD_BUTTON_X, inputs);
+            case BUTTON_Y: return Check(PAD::PAD_BUTTON_Y, inputs);
+            case BUTTON_Z: return Check(PAD::PAD_BUTTON_Z, inputs);
+            case BUTTON_PLUS: return Check(PAD::PAD_BUTTON_START, inputs);
+            case BUTTON_L: return Check(PAD::PAD_BUTTON_L, inputs);
+            case BUTTON_R: return Check(PAD::PAD_BUTTON_R, inputs);
             default: return false;
         }
     }
@@ -105,12 +106,14 @@ bool CheckButtonPressed(Input::RealControllerHolder *controllerHolder, Controlle
     return false;
 }
 
-bool CheckButtonCombination(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, UniversalButtons buttonMask){
+bool CheckCombination(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, Universal buttonMask){
     bool pressed = true;
     for (int i = 0; i < 32; ++i) {
         int iMask = 1 << i;
         if (buttonMask & iMask)
-            if (!CheckButtonPressed(controllerHolder, controllerType, onlyCheckNewButtons, (UniversalButtons) iMask)) pressed = false;
+            if (!CheckPressed(controllerHolder, controllerType, onlyCheckNewButtons, static_cast<Universal>(iMask))) pressed = false;
         }
     return pressed;
 }
+} // namespace Button
+} // namespace VP

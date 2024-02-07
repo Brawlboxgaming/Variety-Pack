@@ -1,15 +1,17 @@
 #include <kamek.hpp>
-#include <game/UI/SectionMgr/SectionMgr.hpp>
-#include <game/Race/RaceData.hpp>
-#include <game/Race/RaceInfo/RaceInfo.hpp>
-#include <game/Input/InputManager.hpp>
-#include <game/Item/ItemManager.hpp>
+#include <MarioKartWii/UI/SectionMgr/SectionMgr.hpp>
+#include <MarioKartWii/Race/RaceData.hpp>
+#include <MarioKartWii/Race/RaceInfo/RaceInfo.hpp>
+#include <MarioKartWii/Input/InputManager.hpp>
+#include <MarioKartWii/Item/ItemManager.hpp>
 #include <Common/ButtonCheck.hpp>
-#include <Pulsar/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
 #include <VP.hpp>
 
+namespace VP {
+namespace Race{
 bool BlueShellSwapping(bool hasItem){
-    if (VP::GetGamemode() == VP::RACESETTING_MODE_BSS){
+    if (System::GetGamemode() == System::RACESETTING_MODE_BSS){
         for(int i=0; i<RaceData::sInstance->racesScenario.localPlayerCount; ++i){
             u8 hudPlayerId = RaceData::sInstance->racesScenario.settings.hudPlayerIds[i];
             Input::RealControllerHolder *controllerHolder = &Input::Manager::sInstance->realControllerHolders[i];
@@ -18,8 +20,8 @@ bool BlueShellSwapping(bool hasItem){
                 ItemId currentItem = Item::Manager::sInstance->players[hudPlayerId].inventory.currentItemId;
                 if (currentItem == BLUE_SHELL){
                     bool switchItem = false;
-                    if(CheckButtonPressed(controllerHolder, controllerType, false, BUTTON_MINUS) ||
-                    CheckButtonPressed(controllerHolder, controllerType, false, BUTTON_Y)){
+                    if(Button::CheckPressed(controllerHolder, controllerType, false, Button::BUTTON_MINUS) ||
+                    Button::CheckPressed(controllerHolder, controllerType, false, Button::BUTTON_Y)){
                         switchItem = true;
                     }
                     if (switchItem){
@@ -27,7 +29,7 @@ bool BlueShellSwapping(bool hasItem){
                         u8 mushroomCount = 3;
                         u8 playerCount = Item::Manager::sInstance->playerCount;
                         u8 position = RaceInfo::sInstance->players[hudPlayerId]->position;
-                        float third = (float)position/(float)playerCount;
+                        float third = static_cast<float>(position)/static_cast<float>(playerCount);
                         if (third <= 1.0f/3.0f){
                             mushroomCount = 1;
                         }
@@ -45,3 +47,5 @@ bool BlueShellSwapping(bool hasItem){
 }
 
 kmBranch(0x807eeed0, BlueShellSwapping);
+} // namespace Race
+} // namespace VP

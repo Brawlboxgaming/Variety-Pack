@@ -1,10 +1,14 @@
-#include <game/UI/SectionMgr/SectionMgr.hpp>
-#include <game/Input/InputManager.hpp>
-#include <game/Input/Controller.hpp>
-#include <game/Input/ControllerHolder.hpp>
+#include <MarioKartWii/UI/SectionMgr/SectionMgr.hpp>
+#include <MarioKartWii/Input/InputManager.hpp>
+#include <MarioKartWii/Input/Controller.hpp>
+#include <MarioKartWii/Input/ControllerHolder.hpp>
+#include <core/rvl/WPAD.hpp>
+#include <core/rvl/PAD.hpp>
 #include <kamek.hpp>
 
-enum UniversalButtons{
+namespace VP {
+namespace Button {
+enum Universal{
   BUTTON_NONE             = 0,
   BUTTON_DPAD_LEFT        = 1 << 0,
   BUTTON_DPAD_RIGHT       = 1 << 1,
@@ -34,63 +38,7 @@ enum UniversalButtons{
   C_STICK_UPLEFT_EIGHT    = 1 << 25,
 };
 
-
-enum Buttons {
-  WHEEL_DPAD_LEFT = 0x1,
-  WHEEL_DPAD_RIGHT = 0x2,
-  WHEEL_DPAD_DOWN = 0x4,
-  WHEEL_DPAD_UP = 0x8,
-  WHEEL_A = 0x800,
-  WHEEL_B = 0x400,
-  WHEEL_MINUS = 0x1000,
-  WHEEL_PLUS = 0x10,
-  WHEEL_HOME = 0x8000,
-  WHEEL_1 = 0x200,
-  WHEEL_2 = 0x100,
-
-  NUNCHUCK_DPAD_LEFT = 0x1,
-  NUNCHUCK_DPAD_RIGHT = 0x2,
-  NUNCHUCK_DPAD_DOWN = 0x4,
-  NUNCHUCK_DPAD_UP = 0x8,
-  NUNCHUCK_A = 0x800,
-  NUNCHUCK_B = 0x400,
-  NUNCHUCK_MINUS = 0x1000,
-  NUNCHUCK_PLUS = 0x10,
-  NUNCHUCK_HOME = 0x8000,
-  NUNCHUCK_1 = 0x200,
-  NUNCHUCK_2 = 0x100,
-  NUNCHUCK_C = 0x4000,
-  NUNCHUCK_Z = 0x2000,
-
-  CLASSIC_DPAD_LEFT = 0x2,
-  CLASSIC_DPAD_RIGHT = 0x2000,
-  CLASSIC_DPAD_DOWN = 0x4000,
-  CLASSIC_DPAD_UP = 0x1,
-  CLASSIC_A = 0x10,
-  CLASSIC_B = 0x40,
-  CLASSIC_X = 0x8,
-  CLASSIC_Y = 0x20,
-  CLASSIC_MINUS = 0x1000,
-  CLASSIC_PLUS = 0x40,
-  CLASSIC_HOME = 0x800,
-  CLASSIC_L = 0x2000,
-  CLASSIC_R = 0x200,
-  CLASSIC_ZL = 0x80,
-  CLASSIC_Z = 0x4,
-
-  GCN_DPAD_LEFT = 0x1,
-  GCN_DPAD_RIGHT = 0x2,
-  GCN_DPAD_DOWN = 0x4,
-  GCN_DPAD_UP = 0x8,
-  GCN_A = 0x100,
-  GCN_B = 0x200,
-  GCN_X = 0x400,
-  GCN_Y = 0x800,
-  GCN_Z = 0x10,
-  GCN_START = 0x1000,
-  GCN_L = 0x40,
-  GCN_R = 0x20
-};
-
-bool CheckButtonPressed(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, u32 button);
-bool CheckButtonCombination(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, UniversalButtons buttonMask);
+bool CheckPressed(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, u32 button);
+bool CheckCombination(Input::RealControllerHolder *controllerHolder, ControllerType controllerType, bool onlyCheckNewButtons, Universal buttonMask);
+} // namespace Button
+} // namespace VP

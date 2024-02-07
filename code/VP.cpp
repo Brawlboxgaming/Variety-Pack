@@ -1,19 +1,20 @@
-#include <game/Race/RaceData.hpp>
-#include <Pulsar/SlotExpansion/CupsDef.hpp>
-#include <Pulsar/Settings/UI/SettingsPanel.hpp>
+#include <MarioKartWii/Race/RaceData.hpp>
+#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/Settings/UI/SettingsPanel.hpp>
 #include <VP.hpp>
 
-Pulsar::System *VP::Create() {
-    return new VP(); //now Pulsar::sInstance is of type VP
+namespace VP {
+Pulsar::System *System::Create() {
+    return new System(); //now Pulsar::sInstance is of type VP
 }
-Pulsar::System::Inherit CreateVP(VP::Create); //Create a Inherit that'll get called back by Pulsar::CreatePulsar
+Pulsar::System::Inherit CreateVP(System::Create); //Create a Inherit that'll get called back by Pulsar::CreatePulsar
 
-void VP::AfterInit(){
+void System::AfterInit(){
     ++Pulsar::UI::SettingsPanel::scrollerCount[Pulsar::Settings::SETTINGSTYPE_RACE];
     Pulsar::UI::SettingsPanel::optionsPerPagePerScroller[Pulsar::Settings::SETTINGSTYPE_RACE][0] = 4;
 }
 
-VP::Gamemode VP::GetGamemode(){
+System::Gamemode System::GetGamemode(){
     const bool isRegs = Pulsar::CupsConfig::IsRegsSituation();
     const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
     const bool isTTs = gameMode == MODE_TIME_TRIAL;
@@ -21,7 +22,7 @@ VP::Gamemode VP::GetGamemode(){
     if (!isRegs){
         if (!isTTs){
             if (isFroom){
-                return VP::GetsInstance()->hostMode;
+                return System::GetsInstance()->hostMode;
             }
             return static_cast<Gamemode>(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, SETTINGRACE_SCROLLER_MODE));
         }
@@ -29,3 +30,4 @@ VP::Gamemode VP::GetGamemode(){
     }
     return RACESETTING_MODE_NONE;
 }
+} // namespace VP
