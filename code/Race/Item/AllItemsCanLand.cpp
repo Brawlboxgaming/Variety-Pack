@@ -12,32 +12,32 @@ int UseItem(Kart::Collision *kartCollision, ItemId id){
 }
 
 int AllShocksCanLand(Kart::Collision *kartCollision){
-    if (!Pulsar::CupsDef::IsRegsSituation()) return UseItem(kartCollision, LIGHTNING);
+    if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, LIGHTNING);
     return -1;
 }
 
 int AllMegasCanLand(Kart::Collision *kartCollision){
-    if (!Pulsar::CupsDef::IsRegsSituation()) return UseItem(kartCollision, MEGA_MUSHROOM);
+    if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, MEGA_MUSHROOM);
     return -1;
 }
 
 int AllFeathersCanLand(Kart::Collision *kartCollision){
-    if (!Pulsar::CupsDef::IsRegsSituation()) return UseItem(kartCollision, BLOOPER);
+    if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, BLOOPER);
     return -1;
 }
 
 int AllPOWsCanLand(Kart::Collision *kartCollision){
-    if (!Pulsar::CupsDef::IsRegsSituation()) return UseItem(kartCollision, POW_BLOCK);
+    if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, POW_BLOCK);
     return -1;
 }
 
 int AllGoldensCanLand(Kart::Collision *kartCollision){
-    if (!Pulsar::CupsDef::IsRegsSituation()) return UseItem(kartCollision, MUSHROOM);
+    if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, MUSHROOM);
     return -1;
 }
 
 int AllBulletsCanLand(Kart::Collision *kartCollision){
-    if (!Pulsar::CupsDef::IsRegsSituation()) return UseItem(kartCollision, BULLET_BILL);
+    if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, BULLET_BILL);
     return -1;
 }
 

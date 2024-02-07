@@ -9,7 +9,7 @@
 #include <VP.hpp>
 
 void UpdateTimers(){
-    if (!Pulsar::CupsDef::IsRegsSituation()) {
+    if (!Pulsar::CupsConfig::IsRegsSituation()) {
         VP *vp = VP::GetsInstance();
         for (int i=0; i<12; ++i){
             if (vp->invincibilityTimer[i] > 0){
@@ -22,7 +22,7 @@ void UpdateTimers(){
 static RaceFrameHook UpdateTimerHook(UpdateTimers);
 
 void ResetTimers(){
-    if (!Pulsar::CupsDef::IsRegsSituation()) {
+    if (!Pulsar::CupsConfig::IsRegsSituation()) {
         VP *vp = VP::GetsInstance();
         for (int i=0; i<12; ++i){
                 vp->invincibilityTimer[i] = 0;
@@ -33,7 +33,7 @@ void ResetTimers(){
 static RaceLoadHook ResetTimerHook(ResetTimers);
 
 void InvincibilityFrames(Kart::Damage *kartDamage, DamageType newDamage, u32 r5, bool affectsMegas, DamageType* appliedDamage, u32 playerIdxItemPlayerSub, u32 r8){
-    if (!Pulsar::CupsDef::IsRegsSituation() && !IsBattle()) {
+    if (!Pulsar::CupsConfig::IsRegsSituation() && !IsBattle()) {
         const u8 playerId = kartDamage->link.GetPlayerIdx();
         const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
         const VP::Gamemode vpGameMode = VP::GetGamemode();
