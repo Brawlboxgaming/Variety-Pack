@@ -17,9 +17,6 @@ namespace Race{
 // Don't Lose VR When Disconnecting
 kmWrite32(0x80856560, 0x60000000);
 
-// Coloured Minimap
-kmWrite32(0x807DFC24, 0x60000000);
-
 void VSPointsSystem(){
     if (!IsBattle()){
         RacedataScenario &scenario = RaceData::sInstance->menusScenario;
