@@ -1,5 +1,5 @@
 # Variety Pack
-Variety Pack is a Mario Kart Wii distribution which was build on the engine [Pulsar](https://github.com/MelgMKW/Pulsar), created by MelgMKW. If you would like to see further information about the distribution, please visit the wiki page: [Variety Pack](https://wiki.tockdom.com/wiki/Variety_Pack).
+Variety Pack is a Mario Kart Wii distribution which was build on the engine [Pulsar](https://github.com/MelgMKW/Pulsar). If you would like to see further information about the distribution, please visit the wiki page: [Variety Pack](https://wiki.tockdom.com/wiki/Variety_Pack).
 
 
 # Pulsar
