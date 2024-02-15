@@ -1,4 +1,3 @@
-#include <kamek.hpp>
 #include <MarioKartWii/Archive/ArchiveRoot.hpp>
 #include <VP.hpp>
 
@@ -20,7 +19,6 @@ void *GetCustomItemSlot(ArchiveRoot *archive, ArchiveSource type, const char *na
     }
     return archive->GetFile(type, name, length);
 }
-
 kmCall(0x807bb128, GetCustomItemSlot);
 kmCall(0x807bb030, GetCustomItemSlot);
 kmCall(0x807bb200, GetCustomItemSlot);
@@ -34,7 +32,6 @@ void *GetCustomDriverParam(ArchiveRoot *archive, ArchiveSource type, const char 
     }
     return archive->GetFile(type, name, length);
 }
-
 kmCall(0x80591a54, GetCustomDriverParam);
 } // namespace Race
 } // namespace VP

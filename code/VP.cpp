@@ -10,8 +10,13 @@ Pulsar::System *System::Create() {
 Pulsar::System::Inherit CreateVP(System::Create); //Create a Inherit that'll get called back by Pulsar::CreatePulsar
 
 void System::AfterInit(){
+    // Gamemode Scroller
     ++Pulsar::UI::SettingsPanel::scrollerCount[Pulsar::Settings::SETTINGSTYPE_RACE];
     Pulsar::UI::SettingsPanel::optionsPerPagePerScroller[Pulsar::Settings::SETTINGSTYPE_RACE][0] = 4;
+
+    // No Music
+    ++Pulsar::UI::SettingsPanel::radioButtonCount[Pulsar::Settings::SETTINGSTYPE_MENU];
+    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[Pulsar::Settings::SETTINGSTYPE_MENU][1] = 2;
 }
 
 System::Gamemode System::GetGamemode(){

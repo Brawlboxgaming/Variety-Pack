@@ -25,11 +25,20 @@ public:
         RACESETTING_MODE_NONE = 0x4
     };
     
-    enum ExtraRaceSettings{
-        SETTINGRACE_SCROLLER_MODE = 0 + 6
+    enum ExtraSettings{ // +6 for scrollers
+        // Race
+        SETTINGRACE_SCROLLER_MODE = 0 + 6,
+
+        // Menu
+        SETTINGMENU_RADIO_MUSIC = 1
     };
 
     enum BMGIds{
+        RADIO_MUSIC_TITLE = 0x3001,
+        RADIO_MUSIC_DISABLED = 0x3020,
+        RADIO_MUSIC_ENABLED = 0x3021,
+        RADIO_MUSIC_DISABLED_DESC = 0x3200,
+        RADIO_MUSIC_ENABLED_DESC = 0x3201,
         SCROLLER_MODE_TITLE = 0x4700,
         SCROLLER_MODE_NONE = 0x4710,
         SCROLLER_MODE_BSS = 0x4711,
