@@ -14,7 +14,7 @@ void ChangeRegion(){
     RKNetController_Search6 = 0x38E00357;
     RKNetController_Search7 = 0x38800057;
     RKNetController_Search8 = 0x38800057;
-    if(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, System::SETTINGRACE_SCROLLER_MODE) == System::RACESETTING_MODE_BSS){
+    if(System::GetGamemode() == System::RACESETTING_MODE_BSS){
         RKNetController_Search1 = 0x38A00359;
         RKNetController_Search2 = 0x38C00359;
         RKNetController_Search3 = 0x38E00359;
@@ -24,7 +24,7 @@ void ChangeRegion(){
         RKNetController_Search7 = 0x38800059;
         RKNetController_Search8 = 0x38800059;
     }
-    else if(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, System::SETTINGRACE_SCROLLER_MODE) == System::RACESETTING_MODE_BBB){
+    else if(System::GetGamemode() == System::RACESETTING_MODE_BBB){
         RKNetController_Search1 = 0x38A0035a;
         RKNetController_Search2 = 0x38C0035a;
         RKNetController_Search3 = 0x38E0035a;
@@ -34,7 +34,7 @@ void ChangeRegion(){
         RKNetController_Search7 = 0x3880005a;
         RKNetController_Search8 = 0x3880005a;
     }
-    else if(Pulsar::Settings::Mgr::GetSettingValue(Pulsar::Settings::SETTINGSTYPE_RACE, System::SETTINGRACE_SCROLLER_MODE) == System::RACESETTING_MODE_CHAOTIC){
+    else if(System::GetGamemode() == System::RACESETTING_MODE_CHAOTIC){
         RKNetController_Search1 = 0x38A00363;
         RKNetController_Search2 = 0x38C00363;
         RKNetController_Search3 = 0x38E00363;
