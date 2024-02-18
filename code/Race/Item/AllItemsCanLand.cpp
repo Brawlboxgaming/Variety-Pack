@@ -2,7 +2,7 @@
 #include <MarioKartWii/Kart/KartCollision.hpp>
 #include <MarioKartWii/Item/ItemManager.hpp>
 #include <MarioKartWii/Item/ItemBehaviour.hpp>
-#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
 
 namespace VP {
 namespace Race {

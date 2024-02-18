@@ -2,7 +2,7 @@
 #include <MarioKartWii/Item/ItemBehaviour.hpp>
 #include <MarioKartWii/Item/Obj/ItemObj.hpp>
 #include <PulsarEngine/Settings/Settings.hpp>
-#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
 #include <VP.hpp>
 
 namespace VP {

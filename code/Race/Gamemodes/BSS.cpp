@@ -5,7 +5,7 @@
 #include <MarioKartWii/Input/InputManager.hpp>
 #include <MarioKartWii/Item/ItemManager.hpp>
 #include <Common/ButtonCheck.hpp>
-#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
 #include <VP.hpp>
 
 namespace VP {

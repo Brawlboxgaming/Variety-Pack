@@ -4,7 +4,7 @@
 #include <MarioKartWii/Item/ItemManager.hpp>
 #include <MarioKartWii/Race/RaceData.hpp>
 #include <MarioKartWii/Race/RaceInfo/RaceInfo.hpp>
-#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
 
 namespace VP {
 namespace Race{

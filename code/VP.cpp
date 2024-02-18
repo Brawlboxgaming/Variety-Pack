@@ -1,5 +1,5 @@
 #include <MarioKartWii/Race/RaceData.hpp>
-#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
 #include <PulsarEngine/Settings/UI/SettingsPanel.hpp>
 #include <VP.hpp>
 
