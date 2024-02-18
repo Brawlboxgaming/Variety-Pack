@@ -32,7 +32,7 @@ void System::AfterInit(){
     Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[Pulsar::Settings::SETTINGSTYPE_HOST][4] = 4;
 }
 
-System::WeightClass System::GetWeightClass(CharacterId id){
+System::WeightClass System::GetWeightClass(const CharacterId id){
     switch (id)
     {
         case BABY_MARIO:

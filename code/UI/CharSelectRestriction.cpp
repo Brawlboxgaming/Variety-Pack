@@ -4,75 +4,15 @@
 
 namespace VP {
 namespace UI {
-    System::WeightClass GetMiiWeightClass(CtrlMenuCharacterSelect &charSelect){
-        CharacterId CheckOrder[6] = {
-            MII_S_A_MALE,
-            MII_S_A_FEMALE,
-            MII_M_A_MALE,
-            MII_M_A_FEMALE,
-            MII_L_A_MALE,
-            MII_L_A_FEMALE
-        };
-        CtrlMenuCharacterSelect::ButtonDriver *miiButton = 0;
-        u8 ix = 0;
-        while(miiButton == 0 && ix < 6){
-            miiButton = charSelect.GetButtonDriver(CheckOrder[ix]);
-            ++ix;
-        }
-        if (ix < 2){
+    System::WeightClass GetMiiWeightClass(Mii &mii){
+        CharacterId charId = GetMiiCharacterId(mii);
+        if (charId < MII_M_A_MALE){
             return System::LIGHTWEIGHT;
         }
-        else if(ix < 4){
+        else if (charId < MII_L_A_MALE){
             return System::MEDIUMWEIGHT;
         }
         return System::HEAVYWEIGHT;
-    }
-    
-    CtrlMenuCharacterSelect::ButtonDriver *GetMiiButtonDriver(CtrlMenuCharacterSelect &charSelect, System::CharacterRestriction rest, bool altOutfit){
-        CharacterId CheckOrder[4];
-        if (rest == System::CHAR_LIGHTONLY){
-            CheckOrder[0] = MII_M_A_MALE;
-            CheckOrder[1] = MII_M_A_FEMALE;
-            CheckOrder[2] = MII_L_A_MALE;
-            CheckOrder[3] = MII_L_A_FEMALE;
-            if (altOutfit){
-                CheckOrder[0] = MII_M_B_MALE;
-                CheckOrder[1] = MII_M_B_FEMALE;
-                CheckOrder[2] = MII_L_B_MALE;
-                CheckOrder[3] = MII_L_B_FEMALE;
-            }
-        }
-        else if (rest == System::CHAR_MEDIUMONLY){
-            CheckOrder[0] = MII_S_A_MALE;
-            CheckOrder[1] = MII_S_A_FEMALE;
-            CheckOrder[2] = MII_L_A_MALE;
-            CheckOrder[3] = MII_L_A_FEMALE;
-            if (altOutfit){
-                CheckOrder[0] = MII_S_B_MALE;
-                CheckOrder[1] = MII_S_B_FEMALE;
-                CheckOrder[2] = MII_L_B_MALE;
-                CheckOrder[3] = MII_L_B_FEMALE;
-            }
-        }
-        else{
-            CheckOrder[0] = MII_S_A_MALE;
-            CheckOrder[1] = MII_S_A_FEMALE;
-            CheckOrder[2] = MII_M_A_MALE;
-            CheckOrder[3] = MII_M_A_FEMALE;
-            if (altOutfit){
-                CheckOrder[0] = MII_S_B_MALE;
-                CheckOrder[1] = MII_S_B_FEMALE;
-                CheckOrder[2] = MII_M_B_MALE;
-                CheckOrder[3] = MII_M_B_FEMALE;
-            }
-        }
-        CtrlMenuCharacterSelect::ButtonDriver *miiButton = 0;
-        u8 ix = 0;
-        while(miiButton == 0 && ix < 4){
-            miiButton = charSelect.GetButtonDriver(CheckOrder[ix]);
-            ++ix;
-        }
-        return miiButton;
     }
 
     void EnableButtons(CtrlMenuCharacterSelect &charSelect){
@@ -109,6 +49,7 @@ namespace UI {
         CtrlMenuCharacterSelect::ButtonDriver *driverButtons = charSelect.driverButtonsArray;
         CharacterId currentChar = page->models[hudSlotId].curCharacter;
         System::WeightClass weight = System::GetWeightClass(currentChar);
+        System::WeightClass miiWeight = GetMiiWeightClass(page->localPlayerMiis[0]);
         CtrlMenuCharacterSelect::ButtonDriver *newButton = charSelect.GetButtonDriver(currentChar);
 
         EnableButtons(charSelect);
@@ -131,25 +72,22 @@ namespace UI {
                 }
             }
 
-            if (curSection == SECTION_P2_WIFI ||\
+            if (curSection == SECTION_P2_WIFI ||
             curSection == SECTION_P2_WIFI_FROOM_VS_VOTING ||
             curSection == SECTION_P2_WIFI_FROOM_TEAMVS_VOTING ||
             curSection == SECTION_P2_WIFI_FROOM_BALLOON_VOTING ||
-            curSection == SECTION_P2_WIFI_FROOM_COIN_VOTING){
+            curSection == SECTION_P2_WIFI_FROOM_COIN_VOTING ||
+            (charRestrict == System::CHAR_LIGHTONLY && miiWeight != System::LIGHTWEIGHT) ||
+            (charRestrict == System::CHAR_MEDIUMONLY && miiWeight != System::MEDIUMWEIGHT) ||
+            (charRestrict == System::CHAR_HEAVYONLY && miiWeight != System::HEAVYWEIGHT)){
                 DisableButton(&driverButtons[System::BUTTON_MII_A]);
                 DisableButton(&driverButtons[System::BUTTON_MII_B]);
             }
-            else{
-                CtrlMenuCharacterSelect::ButtonDriver *button = GetMiiButtonDriver(charSelect, charRestrict, false);
-                if (button != 0) DisableButton(button);
-                button = GetMiiButtonDriver(charSelect, charRestrict, true);
-                if (button != 0) DisableButton(button);
-            }
             if (charRestrict == System::CHAR_LIGHTONLY &&
-            (weight != System::LIGHTWEIGHT ||
-            ((GetMiiWeightClass(charSelect) != System::LIGHTWEIGHT || RaceData::sInstance->menusScenario.localPlayerCount > 1) &&
+            ((weight != System::LIGHTWEIGHT && weight != System::MIIS) ||
+            ((miiWeight != System::LIGHTWEIGHT || RaceData::sInstance->menusScenario.localPlayerCount > 1) &&
             currentChar >= MII_S_A_MALE))){
-                newButton->HandleDeselect(hudSlotId, -1);
+                button->HandleDeselect(hudSlotId, -1);
                 if (hudSlotId == 0) newButton = charSelect.GetButtonDriver(static_cast<CharacterId>(BABY_MARIO));
                 else if (hudSlotId == 1) newButton = charSelect.GetButtonDriver(static_cast<CharacterId>(BABY_LUIGI));
                 newButton->SelectInitialButton(hudSlotId);
@@ -157,10 +95,10 @@ namespace UI {
                 page->OnButtonDriverSelect(newButton, newButton->buttonId, hudSlotId);
             }
             else if (charRestrict == System::CHAR_MEDIUMONLY &&
-            (weight != System::MEDIUMWEIGHT ||
-            ((GetMiiWeightClass(charSelect) != System::MEDIUMWEIGHT || RaceData::sInstance->menusScenario.localPlayerCount > 1) &&
+            ((weight != System::MEDIUMWEIGHT && weight != System::MIIS) ||
+            ((miiWeight != System::MEDIUMWEIGHT || RaceData::sInstance->menusScenario.localPlayerCount > 1) &&
             currentChar >= MII_S_A_MALE))){
-                newButton->HandleDeselect(hudSlotId, -1);
+                button->HandleDeselect(hudSlotId, -1);
                 if (hudSlotId == 0) newButton = charSelect.GetButtonDriver(static_cast<CharacterId>(MARIO));
                 else if (hudSlotId == 1) newButton = charSelect.GetButtonDriver(static_cast<CharacterId>(LUIGI));
                 newButton->SelectInitialButton(hudSlotId);
@@ -168,10 +106,10 @@ namespace UI {
                 page->OnButtonDriverSelect(newButton, newButton->buttonId, hudSlotId);
             }
             else if (charRestrict == System::CHAR_HEAVYONLY &&
-            (weight != System::HEAVYWEIGHT ||
-            ((GetMiiWeightClass(charSelect) != System::HEAVYWEIGHT || RaceData::sInstance->menusScenario.localPlayerCount > 1) &&
+            ((weight != System::HEAVYWEIGHT && weight != System::MIIS) ||
+            ((miiWeight != System::HEAVYWEIGHT || RaceData::sInstance->menusScenario.localPlayerCount > 1) &&
             currentChar >= MII_S_A_MALE))){
-                newButton->HandleDeselect(hudSlotId, -1);
+                button->HandleDeselect(hudSlotId, -1);
                 if (hudSlotId == 0) newButton = charSelect.GetButtonDriver(static_cast<CharacterId>(WARIO));
                 else if (hudSlotId == 1) newButton = charSelect.GetButtonDriver(static_cast<CharacterId>(WALUIGI));
                 newButton->SelectInitialButton(hudSlotId);
