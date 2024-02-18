@@ -8,7 +8,7 @@
 #include <core/rvl/os/OS.hpp>
 #include <PulsarEngine/Race/200ccParams.hpp>
 #include <MarioKartWii/GlobalFunctions.hpp>
-#include <PulsarEngine/SlotExpansion/CupsDef.hpp>
+#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
 #include <MarioKartWii/Item/Obj/Bomb.hpp>
 #include <VP.hpp>
 
