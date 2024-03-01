@@ -4,6 +4,7 @@
 #include <MarioKartWii/Item/Obj/ItemObj.hpp>
 #include <MarioKartWii/System/Identifiers.hpp>
 #include <MarioKartWii/GlobalFunctions.hpp>
+#include <VPEnums.hpp>
 
 extern u32 RKNetController_Search1;
 extern u32 RKNetController_Search2;

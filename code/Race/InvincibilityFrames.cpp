@@ -41,14 +41,14 @@ void InvincibilityFrames(Kart::Damage *kartDamage, DamageType newDamage, u32 r5,
     if (!Pulsar::CupsConfig::IsRegsSituation() && !IsBattle()) {
         const u8 playerId = kartDamage->link.GetPlayerIdx();
         const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
-        const System::Gamemode vpGameMode = System::GetGamemode();
+        const Gamemode vpGameMode = System::GetGamemode();
         System *vp = System::GetsInstance();
         if (vp->invincibilityTimer[playerId] > 0){
             return;
         }
         vp->invincibilityTimer[playerId] = 150;
 
-        if (vpGameMode == System::RACESETTING_MODE_CHAOTIC){ // For Chaotic add item effects and damage
+        if (vpGameMode == RACESETTING_MODE_CHAOTIC){ // For Chaotic add item effects and damage
             newDamage = ApplyChaoticEffects(newDamage, playerId);
         }
     }

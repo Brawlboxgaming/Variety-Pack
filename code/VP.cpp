@@ -32,7 +32,7 @@ void System::AfterInit(){
     Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[Pulsar::Settings::SETTINGSTYPE_HOST][4] = 4;
 }
 
-System::WeightClass System::GetWeightClass(const CharacterId id){
+WeightClass System::GetWeightClass(const CharacterId id){
     switch (id)
     {
         case BABY_MARIO:
@@ -67,7 +67,7 @@ System::WeightClass System::GetWeightClass(const CharacterId id){
     }
 }
 
-System::CharacterRestriction System::GetCharacterRestriction(){
+CharacterRestriction System::GetCharacterRestriction(){
     const GameMode gameMode = RaceData::sInstance->menusScenario.settings.gamemode;
     const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
     if (isFroom){
@@ -76,7 +76,7 @@ System::CharacterRestriction System::GetCharacterRestriction(){
     return CHAR_DEFAULTSELECTION;
 }
 
-System::KartRestriction System::GetKartRestriction(){
+KartRestriction System::GetKartRestriction(){
     const GameMode gameMode = RaceData::sInstance->menusScenario.settings.gamemode;
     const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
     if (isFroom){
@@ -85,7 +85,7 @@ System::KartRestriction System::GetKartRestriction(){
     return KART_DEFAULTSELECTION;
 }
 
-System::Gamemode System::GetGamemode(){
+Gamemode System::GetGamemode(){
     const bool isRegs = Pulsar::CupsConfig::IsRegsSituation();
     const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
     const bool isTTs = gameMode == MODE_TIME_TRIAL;

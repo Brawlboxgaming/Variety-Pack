@@ -3,8 +3,7 @@
 namespace VP {
 namespace Sound {
     void SetMusicState(){
-        SoundPlayersVolumeMgr::sInstance->volumes[0].curValue = 1;
-        if (Pulsar::Settings::Mgr::GetSettingValue(static_cast<Pulsar::Settings::Type>(System::SETTINGSTYPE_VP), System::SETTINGVP_RADIO_MUSIC)){
+        if (Pulsar::Settings::Mgr::GetSettingValue(static_cast<Pulsar::Settings::Type>(SETTINGSTYPE_VP), SETTINGVP_RADIO_MUSIC)){
             SoundPlayersVolumeMgr::sInstance->volumes[0].curValue = 0;
         }
     }

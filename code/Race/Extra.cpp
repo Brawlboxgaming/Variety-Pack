@@ -56,7 +56,7 @@ void LoadOriginalItemboxes(g3d::ResFile &file, ArchiveSource type, const char *b
 kmCall(0x8081fdb4, LoadOriginalItemboxes);
 
 void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName){
-    if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && System::GetGamemode() != System::RACESETTING_MODE_NONE){
+    if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && System::GetGamemode() != RACESETTING_MODE_NONE){
         brresName = "itemBoxNiseRtpaVP.brres";
     }
     ModelDirector::BindBRRES(file, type, brresName);
@@ -65,7 +65,7 @@ kmCall(0x807a0160, LoadCustomFakeItemboxes);
 
 void MotionSensorBombs1(Item::ObjBomb* obj){
     int timer = 300;
-    if (System::GetGamemode() != System::RACESETTING_MODE_NONE){
+    if (System::GetGamemode() != RACESETTING_MODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;
@@ -77,7 +77,7 @@ kmWrite32(0x807a5c10, 0x60000000); // nope the store of the timer
 void MotionSensorBombs2(Item::ObjBomb* obj, UnkType r4, UnkType r5, UnkType r6, float f1, float f2, float f3){
     func_807b7104(obj, r4, r5, r6, f1, f2, f3);
     int timer = 90;
-    if (System::GetGamemode() != System::RACESETTING_MODE_NONE){
+    if (System::GetGamemode() != RACESETTING_MODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;
