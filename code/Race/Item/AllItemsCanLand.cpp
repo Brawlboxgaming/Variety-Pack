@@ -6,39 +6,39 @@
 
 namespace VP {
 namespace Race {
-int UseItem(Kart::Collision *kartCollision, ItemId id){
+static int UseItem(Kart::Collision *kartCollision, ItemId id){
     u8 playerId = kartCollision->link.GetPlayerIdx();
     Item::Manager::sInstance->players[playerId].inventory.currentItemCount++;
     Item::Behaviour::behaviourTable[id].useFunction(Item::Manager::sInstance->players[playerId]);
     return -1;
 }
 
-int AllShocksCanLand(Kart::Collision *kartCollision){
+static int AllShocksCanLand(Kart::Collision *kartCollision){
     if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, LIGHTNING);
     return -1;
 }
 
-int AllMegasCanLand(Kart::Collision *kartCollision){
+static int AllMegasCanLand(Kart::Collision *kartCollision){
     if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, MEGA_MUSHROOM);
     return -1;
 }
 
-int AllFeathersCanLand(Kart::Collision *kartCollision){
+static int AllFeathersCanLand(Kart::Collision *kartCollision){
     if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, BLOOPER);
     return -1;
 }
 
-int AllPOWsCanLand(Kart::Collision *kartCollision){
+static int AllPOWsCanLand(Kart::Collision *kartCollision){
     if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, POW_BLOCK);
     return -1;
 }
 
-int AllGoldensCanLand(Kart::Collision *kartCollision){
+static int AllGoldensCanLand(Kart::Collision *kartCollision){
     if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, MUSHROOM);
     return -1;
 }
 
-int AllBulletsCanLand(Kart::Collision *kartCollision){
+static int AllBulletsCanLand(Kart::Collision *kartCollision){
     if (!Pulsar::CupsConfig::IsRegsSituation()) return UseItem(kartCollision, BULLET_BILL);
     return -1;
 }

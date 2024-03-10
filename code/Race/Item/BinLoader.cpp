@@ -3,7 +3,7 @@
 
 namespace VP {
 namespace Race{
-void *GetCustomItemSlot(ArchiveRoot *archive, ArchiveSource type, const char *name, u32 *length){
+static void *GetCustomItemSlot(ArchiveRoot *archive, ArchiveSource type, const char *name, u32 *length){
     const Gamemode gamemode = System::GetGamemode();
     if (gamemode == RACESETTING_MODE_NORMAL){
     name = "ItemSlot0.bin";
@@ -25,7 +25,7 @@ kmCall(0x807bb200, GetCustomItemSlot);
 kmCall(0x807bb53c, GetCustomItemSlot);
 kmCall(0x807bbb58, GetCustomItemSlot);
 
-void *GetCustomDriverParam(ArchiveRoot *archive, ArchiveSource type, const char *name, u32 *length){
+static void *GetCustomDriverParam(ArchiveRoot *archive, ArchiveSource type, const char *name, u32 *length){
     const Gamemode gamemode = System::GetGamemode();
     if (gamemode != RACESETTING_MODE_NONE){
         name = "driverParamVP.bin";

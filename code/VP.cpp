@@ -10,26 +10,19 @@ Pulsar::System *System::Create() {
 Pulsar::System::Inherit CreateVP(System::Create); //Create a Inherit that'll get called back by Pulsar::CreatePulsar
 
 void System::AfterInit(){
-    // Create new settings page (by incrementing pageCount)
     ++Pulsar::UI::SettingsPanel::pageCount;
 
     // Radio button count for new page
-    Pulsar::UI::SettingsPanel::radioButtonCount[SETTINGSTYPE_VP] = 1;
-    // No Music Option Count i.e. Disabled/Enabled
-    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[SETTINGSTYPE_VP][0] = 2;
+    Pulsar::UI::SettingsPanel::radioButtonCount[SETTINGSTYPE_VP] = 2;
+    // Restrict Kart Selection Count i.e. Default/Karts/Bikes
+    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[SETTINGSTYPE_VP][0] = 3;
+    // Restrict Character Selection Count i.e. Default/Light/Medium/Heavy
+    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[SETTINGSTYPE_VP][1] = 4;
 
     // Scroller count for new page
     Pulsar::UI::SettingsPanel::scrollerCount[SETTINGSTYPE_VP] = 1;
     // Gamemode Scroller Option Count
     Pulsar::UI::SettingsPanel::optionsPerPagePerScroller[SETTINGSTYPE_VP][0] = 4;
-
-    // Create settings for existing pages
-    // Restrict Kart Selection + Character Selection in Friend Rooms
-    Pulsar::UI::SettingsPanel::radioButtonCount[Pulsar::Settings::SETTINGSTYPE_HOST] = 5;
-    // Restrict Kart Selection Count i.e. Default/Karts/Bikes
-    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[Pulsar::Settings::SETTINGSTYPE_HOST][3] = 3;
-    // Restrict Character Selection Count i.e. Default/Light/Medium/Heavy
-    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[Pulsar::Settings::SETTINGSTYPE_HOST][4] = 4;
 }
 
 WeightClass System::GetWeightClass(const CharacterId id){

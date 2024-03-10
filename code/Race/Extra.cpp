@@ -17,7 +17,7 @@ namespace Race{
 // Don't Lose VR When Disconnecting
 kmWrite32(0x80856560, 0x60000000);
 
-void VSPointsSystem(){
+static void VSPointsSystem(){
     if (!IsBattle()){
         RacedataScenario &scenario = RaceData::sInstance->menusScenario;
         const RaceInfo *raceinfo = RaceInfo::sInstance;
@@ -47,7 +47,7 @@ void VSPointsSystem(){
 }
 kmBranch(0x8052ed14, VSPointsSystem);
 
-void LoadOriginalItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName, const g3d::ResFile& fallBack){
+static void LoadOriginalItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName, const g3d::ResFile& fallBack){
     if (strcmp(brresName, "itembox.brres") == 0){
         type = ARCHIVE_HOLDER_COMMON;
     }
@@ -55,7 +55,7 @@ void LoadOriginalItemboxes(g3d::ResFile &file, ArchiveSource type, const char *b
 }
 kmCall(0x8081fdb4, LoadOriginalItemboxes);
 
-void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName){
+static void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName){
     if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && System::GetGamemode() != RACESETTING_MODE_NONE){
         brresName = "itemBoxNiseRtpaVP.brres";
     }
@@ -63,7 +63,7 @@ void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char 
 }
 kmCall(0x807a0160, LoadCustomFakeItemboxes);
 
-void MotionSensorBombs1(Item::ObjBomb* obj){
+static void DropMotionSensorBombs(Item::ObjBomb* obj){
     int timer = 300;
     if (System::GetGamemode() != RACESETTING_MODE_NONE){
         timer = 4095;
@@ -71,18 +71,18 @@ void MotionSensorBombs1(Item::ObjBomb* obj){
     obj->timer = timer;
     obj->Item::Obj::SpawnModel();
 }
-kmCall(0x807a5be4, MotionSensorBombs1);
+kmCall(0x807a5be4, DropMotionSensorBombs);
 kmWrite32(0x807a5c10, 0x60000000); // nope the store of the timer
 
-void MotionSensorBombs2(Item::ObjBomb* obj, UnkType r4, UnkType r5, UnkType r6, float f1, float f2, float f3){
-    func_807b7104(obj, r4, r5, r6, f1, f2, f3);
+static void ThrowMotionSensorBombs(Item::ObjBomb* obj, Item::PlayerSub& playerSub, u32 groundEffectDelay, bool isThrow, float speed, float throwHeight, float dropHeight){
+    obj->SetInitialPositionImpl(playerSub, groundEffectDelay, isThrow, speed, throwHeight, dropHeight);
     int timer = 90;
     if (System::GetGamemode() != RACESETTING_MODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;
 }
-kmCall(0x807a4ac4, MotionSensorBombs2);
+kmCall(0x807a4ac4, ThrowMotionSensorBombs);
 kmWrite32(0x807a4acc, 0x60000000); // nop the store of the timer
 } // namespace Race
 } // namespace VP

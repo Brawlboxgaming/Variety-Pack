@@ -7,7 +7,7 @@
 
 namespace VP {
 namespace Race{
-void ChangeItemBehaviour(){
+static void ChangeItemBehaviour(){
     const Gamemode gamemode = System::GetGamemode();
     if (gamemode != RACESETTING_MODE_NONE){
         Item::Behaviour *table = Item::Behaviour::behaviourTable;
@@ -34,7 +34,7 @@ void ChangeItemBehaviour(){
 }
 kmBranch(0x807bd1cc, ChangeItemBehaviour);
 
-void ChangeBillOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
+static void ChangeBillOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
     new (dest) Item::ObjProperties(rel);
     if (System::GetGamemode() != RACESETTING_MODE_NONE){
         dest->limit = 2;
@@ -43,7 +43,7 @@ void ChangeBillOBJProperties(Item::ObjProperties* dest, const Item::ObjPropertie
 
 kmCall(0x80790bf4, ChangeBillOBJProperties);
 
-void ChangeBlueOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
+static void ChangeBlueOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
     new (dest) Item::ObjProperties(rel);
     if(System::GetGamemode() == RACESETTING_MODE_BSS){
         dest->limit = 20;
@@ -52,7 +52,7 @@ void ChangeBlueOBJProperties(Item::ObjProperties* dest, const Item::ObjPropertie
 
 kmCall(0x80790b74, ChangeBlueOBJProperties);
 
-void ChangeBombOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
+static void ChangeBombOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
     new (dest) Item::ObjProperties(rel);
     if(System::GetGamemode() == RACESETTING_MODE_BBB){
         dest->limit = 20;

@@ -13,7 +13,7 @@ namespace Race{
 
 DamageType ApplyChaoticEffects(DamageType newDamage, u8 playerId);
 
-void UpdateTimers(){
+static void UpdateTimers(){
     if (!Pulsar::CupsConfig::IsRegsSituation()) {
         System *vp = System::GetsInstance();
         for (int i=0; i<12; ++i){
@@ -26,7 +26,7 @@ void UpdateTimers(){
 
 static RaceFrameHook UpdateTimerHook(UpdateTimers);
 
-void ResetTimers(){
+static void ResetTimers(){
     if (!Pulsar::CupsConfig::IsRegsSituation()) {
         System *vp = System::GetsInstance();
         for (int i=0; i<12; ++i){
@@ -37,7 +37,7 @@ void ResetTimers(){
 
 static RaceLoadHook ResetTimerHook(ResetTimers);
 
-void InvincibilityFrames(Kart::Damage *kartDamage, DamageType newDamage, u32 r5, bool affectsMegas, DamageType* appliedDamage, u32 playerIdxItemPlayerSub, u32 r8){
+static void InvincibilityFrames(Kart::Damage *kartDamage, DamageType newDamage, u32 r5, bool affectsMegas, DamageType* appliedDamage, u32 playerIdxItemPlayerSub, u32 r8){
     if (!Pulsar::CupsConfig::IsRegsSituation() && !IsBattle()) {
         const u8 playerId = kartDamage->link.GetPlayerIdx();
         const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
@@ -53,109 +53,6 @@ void InvincibilityFrames(Kart::Damage *kartDamage, DamageType newDamage, u32 r5,
         }
     }
     if (newDamage != NO_DAMAGE) kartDamage->SetDamage(newDamage, r5, affectsMegas, appliedDamage, playerIdxItemPlayerSub, r8);
-}
-
-DamageType ApplyChaoticEffects(DamageType newDamage, u8 playerId){
-    Random random;  
-    u8 playerCount = Item::Manager::sInstance->playerCount;
-    u8 position = RaceInfo::sInstance->players[playerId]->position;
-    float third = static_cast<float>(position)/static_cast<float>(playerCount);
-
-    int rnd;
-    
-    if (third <= 1.0f/3.0f){
-        rnd = random.NextLimited(5);
-        if (rnd < 4){
-            // Damage
-            if(random.NextLimited(2) > 0){
-                int dmgRnd = random.NextLimited(18);
-                if (dmgRnd == 16) dmgRnd = 14;
-                newDamage = static_cast<DamageType>(dmgRnd);
-            }
-        }
-        else{
-            // Item
-            int item;
-
-            rnd = random.NextLimited(100);
-            if (rnd < 5){
-                item = MEGA_MUSHROOM;
-            }
-            else{
-                item = MUSHROOM;
-            }
-            Item::Manager::sInstance->players[playerId].inventory.currentItemCount += 1;
-            Item::Behaviour::behaviourTable[item].useFunction(Item::Manager::sInstance->players[playerId]);
-            newDamage = NO_DAMAGE;
-        }
-    }
-    
-    else if (third <= 2.0f/3.0f){
-        rnd = random.NextLimited(2);
-        if (rnd < 1){
-            // Damage
-            if(random.NextLimited(2) > 0){
-                int dmgRnd = random.NextLimited(18);
-                if (dmgRnd == 16) dmgRnd = 14;
-                newDamage = static_cast<DamageType>(dmgRnd);
-            }
-        }
-        else{
-            // Item
-            int item;
-
-            rnd = random.NextLimited(100);
-            if (rnd < 30){
-                item = MEGA_MUSHROOM;
-            }
-            else if (rnd < 60){
-                item = STAR;
-            }
-            else if (rnd < 90){
-                item = POW;
-            }
-            else{
-                item = MUSHROOM;
-            }
-            Item::Manager::sInstance->players[playerId].inventory.currentItemCount += 1;
-            Item::Behaviour::behaviourTable[item].useFunction(Item::Manager::sInstance->players[playerId]);
-            newDamage = NO_DAMAGE;
-        }
-    }
-
-    else{
-        rnd = random.NextLimited(5);
-        if (rnd < 4){
-            // Item
-            int item;
-
-            rnd = random.NextLimited(100);
-            if (rnd < 20){
-                item = MEGA_MUSHROOM;
-            }
-            else if (rnd < 40 && !IsBattle()){
-                item = LIGHTNING;
-            }
-            else if (rnd < 70 && !IsBattle()){
-                item = BULLET_BILL;
-            }
-            else{
-                item = STAR;
-            }
-            Item::Manager::sInstance->players[playerId].inventory.currentItemCount += 1;
-            Item::Behaviour::behaviourTable[item].useFunction(Item::Manager::sInstance->players[playerId]);
-            newDamage = NO_DAMAGE;
-        }
-        else{
-            // Damage
-            if(random.NextLimited(2) > 0){
-                int dmgRnd = random.NextLimited(18);
-                if (dmgRnd == 16) dmgRnd = 14;
-                newDamage = static_cast<DamageType>(dmgRnd);
-            }
-        }
-    }
-    return newDamage;
 }
 
 kmCall(0x805700b0, InvincibilityFrames);
