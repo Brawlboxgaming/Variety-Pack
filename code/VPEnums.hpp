@@ -75,9 +75,8 @@ namespace VP
     };
 
     enum ExtraSettings{ // +6 for scrollers
-        SETTINGVP_RADIO_MUSIC = 0,
-        SETTINGVP_RADIO_KARTSELECT = 1,
-        SETTINGVP_RADIO_CHARSELECT = 2,
+        SETTINGVP_RADIO_KARTSELECT = 0,
+        SETTINGVP_RADIO_CHARSELECT = 1,
 
         SETTINGVP_SCROLLER_MODE = 0 + 6,
     };
