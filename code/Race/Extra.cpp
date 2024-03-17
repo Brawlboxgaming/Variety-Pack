@@ -56,7 +56,7 @@ static void LoadOriginalItemboxes(g3d::ResFile &file, ArchiveSource type, const 
 kmCall(0x8081fdb4, LoadOriginalItemboxes);
 
 static void LoadCustomFakeItemboxes(g3d::ResFile &file, ArchiveSource type, const char *brresName){
-    if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && System::GetGamemode() != RACESETTING_MODE_NONE){
+    if (strcmp(brresName, "itemBoxNiseRtpa.brres") == 0 && System::GetGamemode() != VP_GAMEMODE_NONE){
         brresName = "itemBoxNiseRtpaVP.brres";
     }
     ModelDirector::BindBRRES(file, type, brresName);
@@ -65,7 +65,7 @@ kmCall(0x807a0160, LoadCustomFakeItemboxes);
 
 static void DropMotionSensorBombs(Item::ObjBomb* obj){
     int timer = 300;
-    if (System::GetGamemode() != RACESETTING_MODE_NONE){
+    if (System::GetGamemode() != VP_GAMEMODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;
@@ -77,7 +77,7 @@ kmWrite32(0x807a5c10, 0x60000000); // nope the store of the timer
 static void ThrowMotionSensorBombs(Item::ObjBomb* obj, Item::PlayerSub& playerSub, u32 groundEffectDelay, bool isThrow, float speed, float throwHeight, float dropHeight){
     obj->SetInitialPositionImpl(playerSub, groundEffectDelay, isThrow, speed, throwHeight, dropHeight);
     int timer = 90;
-    if (System::GetGamemode() != RACESETTING_MODE_NONE){
+    if (System::GetGamemode() != VP_GAMEMODE_NONE){
         timer = 4095;
     }
     obj->timer = timer;

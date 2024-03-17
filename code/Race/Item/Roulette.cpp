@@ -10,7 +10,7 @@ namespace VP {
 namespace Race{
 static int AccurateItemRoulette(Item::ItemSlotData *itemSlotData, u16 itemBoxType, u8 position, ItemId prevRandomItem, bool r7){
     const Gamemode gamemode = System::GetGamemode();
-    if (gamemode != RACESETTING_MODE_NONE){
+    if (gamemode != VP_GAMEMODE_NONE){
         const u8 playerId = RaceInfo::sInstance->playerIdInEachPosition[position-1];
         const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
         if (gameMode != MODE_BATTLE && 

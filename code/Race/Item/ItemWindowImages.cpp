@@ -6,13 +6,13 @@ namespace VP {
 namespace Race{
 static void CustomItemWindow(ControlLoader *loader, const char *folderName, const char *ctrName, const char *variant, const char **animNames){
     const Gamemode gamemode = System::GetGamemode();
-    if (gamemode == RACESETTING_MODE_BSS){
+    if (gamemode == VP_GAMEMODE_BSS){
         ctrName = "item_window_BSS";
     }
-    else if (gamemode == RACESETTING_MODE_BBB){
+    else if (gamemode == VP_GAMEMODE_BBB){
         ctrName = "item_window_BBB";
     }
-    else if (gamemode != RACESETTING_MODE_NONE){
+    else if (gamemode != VP_GAMEMODE_NONE){
         ctrName = "item_window_NOR";
     }
     else{
@@ -24,7 +24,7 @@ kmCall(0x807ef50c, CustomItemWindow);
 
 static void CustomItemBalloon(ControlLoader *loader, const char *folderName, const char *ctrName, const char *variant, const char **animNames){
     const Gamemode gamemode = System::GetGamemode();
-    if (gamemode != RACESETTING_MODE_NONE){
+    if (gamemode != VP_GAMEMODE_NONE){
         ctrName = "chase_iNOR"; // I still want default icons for the ItemBalloon even in other gamemodes, but custom icons in the ItemWindow.
     }
     else{

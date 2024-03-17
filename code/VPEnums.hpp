@@ -45,11 +45,11 @@ namespace VP
     };
 
     enum Gamemode{
-        RACESETTING_MODE_NORMAL = 0x0,
-        RACESETTING_MODE_BSS = 0x1,
-        RACESETTING_MODE_BBB = 0x2,
-        RACESETTING_MODE_CHAOTIC = 0x3,
-        RACESETTING_MODE_NONE = 0x4
+        VP_GAMEMODE_NORMAL,
+        VP_GAMEMODE_BSS,
+        VP_GAMEMODE_BBB,
+        VP_GAMEMODE_CHAOTIC,
+        VP_GAMEMODE_NONE
     };
 
     enum KartRestriction{
@@ -81,7 +81,15 @@ namespace VP
         SETTINGVP_SCROLLER_MODE = 0 + 6,
     };
 
-    enum BMGIds{
+    enum DefaultBMGIds{
+        BMG_VR_BOTTOM_100CC = 0x10e0,
+        BMG_VR_BOTTOM_150CC = 0x10e1,
+        BMG_VR_BOTTOM_MIRROR = 0x10e2,
+        BMG_VR_BOTTOM_BALLOON = 0x10e3,
+        BMG_VR_BOTTOM_COIN = 0x10e4,
+    };
+
+    enum CustomBMGIds{
         SETTINGVP_BUTTONCHANGE = 0x2f04,
         SETTINGVP_BUTTONCHANGE_DESC = 0x2f14,
         SETTINGVP_PAGE_DESC = 0x2f24,
@@ -127,7 +135,12 @@ namespace VP
         TRANSMISSION_HELP = 0x15004,
         TRANSMISSION_HELP_BOTTOM = 0x15005,
         TRANSMISSION_HELP_DESC = 0x15006,
-        TRANSMISSION_TITLE = 0x15007
+        TRANSMISSION_TITLE = 0x15007,
+
+        DISPLAY_GAMEMODE_NORMAL = 0x15008,
+        DISPLAY_GAMEMODE_BSS = 0x15009,
+        DISPLAY_GAMEMODE_BBB = 0x1500a,
+        DISPLAY_GAMEMODE_CHAOTIC = 0x1500b,
     };
 } // namespace VP
 #endif

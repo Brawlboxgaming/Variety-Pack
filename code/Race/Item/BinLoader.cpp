@@ -5,16 +5,16 @@ namespace VP {
 namespace Race{
 static void *GetCustomItemSlot(ArchiveRoot *archive, ArchiveSource type, const char *name, u32 *length){
     const Gamemode gamemode = System::GetGamemode();
-    if (gamemode == RACESETTING_MODE_NORMAL){
+    if (gamemode == VP_GAMEMODE_NORMAL){
     name = "ItemSlot0.bin";
     }
-    if (gamemode == RACESETTING_MODE_BSS){
+    if (gamemode == VP_GAMEMODE_BSS){
         name = "ItemSlot1.bin";
     }
-    else if (gamemode == RACESETTING_MODE_BBB){
+    else if (gamemode == VP_GAMEMODE_BBB){
         name = "ItemSlot2.bin";
     }
-    else if (gamemode == RACESETTING_MODE_CHAOTIC){
+    else if (gamemode == VP_GAMEMODE_CHAOTIC){
         name = "ItemSlot3.bin";
     }
     return archive->GetFile(type, name, length);
@@ -27,7 +27,7 @@ kmCall(0x807bbb58, GetCustomItemSlot);
 
 static void *GetCustomDriverParam(ArchiveRoot *archive, ArchiveSource type, const char *name, u32 *length){
     const Gamemode gamemode = System::GetGamemode();
-    if (gamemode != RACESETTING_MODE_NONE){
+    if (gamemode != VP_GAMEMODE_NONE){
         name = "driverParamVP.bin";
     }
     return archive->GetFile(type, name, length);

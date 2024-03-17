@@ -48,7 +48,7 @@ static void InvincibilityFrames(Kart::Damage *kartDamage, DamageType newDamage, 
         }
         vp->invincibilityTimer[playerId] = 150;
 
-        if (vpGameMode == RACESETTING_MODE_CHAOTIC){ // For Chaotic add item effects and damage
+        if (vpGameMode == VP_GAMEMODE_CHAOTIC){ // For Chaotic add item effects and damage
             newDamage = ApplyChaoticEffects(newDamage, playerId);
         }
     }
