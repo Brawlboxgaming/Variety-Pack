@@ -45,11 +45,11 @@ namespace VP
     };
 
     enum Gamemode{
-        VP_GAMEMODE_NORMAL,
-        VP_GAMEMODE_BSS,
-        VP_GAMEMODE_BBB,
-        VP_GAMEMODE_CHAOTIC,
-        VP_GAMEMODE_NONE
+        GAMEMODE_NORMAL,
+        GAMEMODE_BSS,
+        GAMEMODE_BBB,
+        GAMEMODE_CHAOTIC,
+        GAMEMODE_NONE
     };
 
     enum KartRestriction{

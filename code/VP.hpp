@@ -14,7 +14,7 @@ public:
     u8 invincibilityTimer[12];
 
     Gamemode hostMode;
-    bool isRegModeSelected;
+    //bool isRegModeSelected;
     u16 vrScreenTimer;
 
     KartRestriction kartRestrictMode;
@@ -30,7 +30,7 @@ public:
     static CharacterRestriction GetCharacterRestriction();
     static WeightClass GetWeightClass(CharacterId id);
     static void CreateTransmissionSelectPage();
-    static inline int GetGamemodeCount() { return VP_GAMEMODE_NONE; }
+    static inline int GetGamemodeCount() { return GAMEMODE_NONE; }
 
     u8 SetPackROOMMsg() override {
         hostMode = static_cast<Gamemode>(Pulsar::Settings::Mgr::GetSettingValue(static_cast<Pulsar::Settings::Type>(SETTINGSTYPE_VP), SETTINGVP_SCROLLER_MODE)); //3 bits

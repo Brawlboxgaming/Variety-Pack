@@ -83,19 +83,20 @@ KartRestriction System::GetKartRestriction(){
 Gamemode System::GetGamemode(){
     const bool isRegs = Pulsar::CupsConfig::IsRegsSituation();
     const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
-    const bool isTTs = gameMode == MODE_TIME_TRIAL;
-    const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
-    const bool isRegional = gameMode == MODE_PUBLIC_VS || MODE_PUBLIC_BATTLE;
+    const GameMode menuGameMode = RaceData::sInstance->menusScenario.settings.gamemode;
+    const bool isTTs = gameMode == MODE_TIME_TRIAL || menuGameMode == MODE_TIME_TRIAL;
+    const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE || menuGameMode == MODE_PRIVATE_VS || menuGameMode == MODE_PRIVATE_BATTLE;
+    const bool isRegional = gameMode == MODE_PUBLIC_VS || gameMode == MODE_PUBLIC_BATTLE || menuGameMode == MODE_PUBLIC_VS || menuGameMode == MODE_PUBLIC_BATTLE;
     if (!isRegs){
-        if (!isTTs){
-            if (isFroom || isRegional){
+        if (!isTTs && !isRegional){
+            if (isFroom){
                 return GetsInstance()->hostMode;
             }
             return static_cast<Gamemode>(Pulsar::Settings::Mgr::GetSettingValue(static_cast<Pulsar::Settings::Type>(SETTINGSTYPE_VP), SETTINGVP_SCROLLER_MODE));
         }
-        return VP_GAMEMODE_NORMAL;
+        return GAMEMODE_NORMAL;
     }
-    return VP_GAMEMODE_NONE;
+    return GAMEMODE_NONE;
 }
 
 void UpdateVRBMGText(Pages::VR *page){ //assume it's of this type so we can use it's members
@@ -110,7 +111,7 @@ void UpdateVRBMGText(Pages::VR *page){ //assume it's of this type so we can use 
             vp->vrScreenTimer = 360;
         }
         else if(vp->vrScreenTimer == 180){
-            page->ctrlMenuBottomMessage.SetMessage(DISPLAY_GAMEMODE_NORMAL + vp->hostMode);
+            page->ctrlMenuBottomMessage.SetMessage(DISPLAY_GAMEMODE_NORMAL + vp->GetGamemode());
         }
         --vp->vrScreenTimer;
     }

@@ -7,8 +7,7 @@ namespace VP {
 namespace Network{
 void ResetGamemodeAndTimer(){
     System *vp = System::GetsInstance();
-        const GameMode gameMode = RaceData::sInstance->menusScenario.settings.gamemode;
-        vp->isRegModeSelected = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
+        //vp->isRegModeSelected = false;
         vp->vrScreenTimer = 0;
     }
 kmBranch(0x8064a848, ResetGamemodeAndTimer);
