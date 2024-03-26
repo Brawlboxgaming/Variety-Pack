@@ -5,6 +5,7 @@
 #include <MarioKartWii/UI/Page/Menu/MultiDriftSelect.hpp>
 #include <MarioKartWii/UI/SectionMgr/SectionMgr.hpp>
 #include <MarioKartWii/UI/Page/Other/Message.hpp>
+#include <PulsarEngine/UI/ChangeCombo/ChangeCombo.hpp>
 
 namespace VP{
 namespace UI{
@@ -16,6 +17,7 @@ public:
     void SetButtonHandlers(PushButton& pushButton) override;
     int GetActivePlayerBitfield() const override;
     int GetPlayerBitfield() const override;
+    void BeforeControlUpdate() override;
     ManipulatorManager& GetManipulatorManager() override;
 private:
     void OnButtonClick(PushButton& button, u32 hudSlotId);

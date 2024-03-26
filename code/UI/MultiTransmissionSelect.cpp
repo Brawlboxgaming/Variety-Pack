@@ -1,4 +1,3 @@
-#if false
 #include <UI/MultiTransmissionSelect.hpp>
 
 namespace VP{
@@ -16,7 +15,7 @@ namespace UI{
     kmCall(0x8062e6b4, BuildMultiTransmissionSelect); //0x5D
 
     static void LoadMultiTransmissionFromKart(Pages::Menu* menu, PageId pageId, float delay){
-        if (!Pulsar::CupsConfig::IsRegsSituation()){
+        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission()){
             pageId = static_cast<PageId>(PAGE_MULTI_TRANSMISSION_SELECT);
         }
         menu->LoadNextPageWithDelayById(pageId, delay);
@@ -25,7 +24,7 @@ namespace UI{
     kmCall(0x8084a24c, LoadMultiTransmissionFromKart);
 
     static void LoadMultiTransmissionFromDrift(Pages::Menu* menu, float delay){
-        if (!Pulsar::CupsConfig::IsRegsSituation()){
+        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission()){
             menu->prevPageId = static_cast<PageId>(PAGE_MULTI_TRANSMISSION_SELECT);
         }
         menu->LoadPrevPageWithDelay(delay);
@@ -41,10 +40,10 @@ namespace UI{
 
     void MultiTransmissionSelect::OnActivate(){
         for (int i = 0; i < this->externControlCount; i+=2){
-            this->externControls[i]->SetMessage(TRANSMISSION_OUTSIDE);
-            this->externControls[i+1]->SetMessage(TRANSMISSION_INSIDE);
+            this->externControls[i]->SetMessage(MENU_TRANSMISSION_OUTSIDE);
+            this->externControls[i+1]->SetMessage(MENU_TRANSMISSION_INSIDE);
         }
-        this->titleBmg = TRANSMISSION_TITLE;
+        this->titleBmg = MENU_TRANSMISSION_TITLE;
         MenuInteractable::OnActivate();
         for (int i = 0; i < GetLocalPlayerCount(); i++)
         {
@@ -74,35 +73,34 @@ namespace UI{
     }
 
     void MultiTransmissionSelect::OnButtonClick(PushButton& button, u32 hudSlotId){
-        this->activePlayerBitfield |= (2^hudSlotId);
-        u32 playerId = RaceData::sInstance->GetPlayerIdOfLocalPlayer(hudSlotId);
+        this->activePlayerBitfield += (1 << hudSlotId);
         System* vp = System::GetsInstance();
-        bool allPlayersSelected = AreAllPlayersActive();
         switch (button.buttonId)
         {
             case 0:
             case 2:
             case 4:
             case 6:
-                vp->transmissions[playerId] = INSIDE;
+                if (hudSlotId == 0) vp->lastSelectedTransmission = TRANSMISSION_OUTSIDE;
+                vp->transmissions[hudSlotId] = TRANSMISSION_OUTSIDE;
                 this->externControls[button.buttonId+1]->isHidden = true;
                 this->externControls[button.buttonId+1]->manipulator.inaccessible = true;
-                this->controlsManipulatorManager.holders[hudSlotId].info.enabled = false;
-                if (allPlayersSelected) this->LoadNextPageById(PAGE_MULTIPLAYER_DRIFT_SELECT, button);
                 break;
             case 1:
             case 3:
             case 5:
             case 7:
-                vp->transmissions[playerId] = OUTSIDE;
+                if (hudSlotId == 0) vp->lastSelectedTransmission = TRANSMISSION_INSIDE;
+                vp->transmissions[hudSlotId] = TRANSMISSION_INSIDE;
                 this->externControls[button.buttonId-1]->isHidden = true;
                 this->externControls[button.buttonId-1]->manipulator.inaccessible = true;
-                this->controlsManipulatorManager.holders[hudSlotId].info.enabled = false;
-                if (allPlayersSelected) this->LoadNextPageById(PAGE_MULTIPLAYER_DRIFT_SELECT, button);
                 break;
             default:
                 break;
         }
+        this->controlsManipulatorManager.holders[hudSlotId].info.enabled = false;
+        bool allPlayersSelected = AreAllPlayersActive();
+        if (allPlayersSelected) this->LoadNextPageById(PAGE_MULTIPLAYER_DRIFT_SELECT, button);
     }
 
     void MultiTransmissionSelect::OnBackPress(u32 hudSlotId){
@@ -113,7 +111,7 @@ namespace UI{
             this->externControls[hudSlotId*2+1]->isHidden = false;
             this->externControls[hudSlotId*2+1]->manipulator.inaccessible = false;
             this->PlaySound(6, 0); // Back Press sound
-            this->activePlayerBitfield &= ~(2^hudSlotId);
+            this->activePlayerBitfield -= (1 << hudSlotId);
         }
         else{
             for (int i = 0; i < GetLocalPlayerCount(); i++)
@@ -121,6 +119,19 @@ namespace UI{
                 this->controlsManipulatorManager.holders[i].info.enabled = true;
             }
             this->LoadPrevPageWithDelay(0.0f);
+        }
+    }
+
+    void MultiTransmissionSelect::BeforeControlUpdate(){
+        SectionMgr* sectionMgr = SectionMgr::sInstance;
+        Pulsar::UI::ExpCharacterSelect* charSelect = sectionMgr->curSection->Get<Pulsar::UI::ExpCharacterSelect>();
+        if(charSelect->rouletteCounter != -1 && this->currentState == 0x4) {
+            this->controlsManipulatorManager.inaccessible = true;
+            for(int i = 0; i < sectionMgr->sectionParams->localPlayerCount; ++i) {
+                Random random;
+                PushButton* randomTransmission = this->externControls[(i * 2) + random.NextLimited(2)];
+                randomTransmission->HandleClick(i, -1);
+            }
         }
     }
 
@@ -135,4 +146,3 @@ namespace UI{
 
 } // namespace UI
 } // namespace VP
-#endif

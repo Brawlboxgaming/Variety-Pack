@@ -1,8 +1,3 @@
-#include <MarioKartWii/Race/RaceData.hpp>
-#include <PulsarEngine/SlotExpansion/CupsConfig.hpp>
-#include <PulsarEngine/Settings/UI/SettingsPanel.hpp>
-#include <MarioKartWii/RKNet/SELECT.hpp>
-#include <MarioKartWii/UI/Page/Other/VR.hpp>
 #include <VP.hpp>
 
 namespace VP {
@@ -15,11 +10,13 @@ void System::AfterInit(){
     ++Pulsar::UI::SettingsPanel::pageCount;
 
     // Radio button count for new page
-    Pulsar::UI::SettingsPanel::radioButtonCount[SETTINGSTYPE_VP] = 2;
+    Pulsar::UI::SettingsPanel::radioButtonCount[SETTINGSTYPE_VP] = 3;
     // Restrict Kart Selection Count i.e. Default/Karts/Bikes
     Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[SETTINGSTYPE_VP][0] = 3;
     // Restrict Character Selection Count i.e. Default/Light/Medium/Heavy
     Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[SETTINGSTYPE_VP][1] = 4;
+    // Force Transmission in friend rooms
+    Pulsar::UI::SettingsPanel::buttonsPerPagePerRow[SETTINGSTYPE_VP][2] = 3;
 
     // Scroller count for new page
     Pulsar::UI::SettingsPanel::scrollerCount[SETTINGSTYPE_VP] = 1;
@@ -80,6 +77,15 @@ KartRestriction System::GetKartRestriction(){
     return KART_DEFAULTSELECTION;
 }
 
+u8 System::GetTransmission(){
+    const GameMode gameMode = RaceData::sInstance->menusScenario.settings.gamemode;
+    const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
+    if (isFroom){
+        return GetsInstance()->forcedTransmission;
+    }
+    return TRANSMISSION_DEFAULT;
+}
+
 Gamemode System::GetGamemode(){
     const bool isRegs = Pulsar::CupsConfig::IsRegsSituation();
     const GameMode gameMode = RaceData::sInstance->racesScenario.settings.gamemode;
@@ -101,17 +107,33 @@ Gamemode System::GetGamemode(){
 
 void UpdateVRBMGText(Pages::VR *page){ //assume it's of this type so we can use it's members
     if (page->pageId == PAGE_VR && !Pulsar::CupsConfig::IsRegsSituation()){
+        const GameMode gameMode = RaceData::sInstance->menusScenario.settings.gamemode;
+        const bool isFroom = gameMode == MODE_PRIVATE_VS || gameMode == MODE_PRIVATE_BATTLE;
         System *vp = System::GetsInstance();
-        if (vp->vrScreenTimer == 0){
-            const GameMode gameMode = RaceData::sInstance->menusScenario.settings.gamemode;
-            if (gameMode == MODE_PUBLIC_VS || MODE_PRIVATE_VS)
-                page->ctrlMenuBottomMessage.SetMessage(BMG_VR_BOTTOM_100CC + (RKNet::SELECTHandler::sInstance->GetEngineClass() - 1));
-            else
-                page->ctrlMenuBottomMessage.SetMessage(BMG_VR_BOTTOM_BALLOON + (RKNet::SELECTHandler::sInstance->GetBattleType()));
-            vp->vrScreenTimer = 360;
+        if (isFroom && vp->forcedTransmission != TRANSMISSION_DEFAULT){
+            if (vp->vrScreenTimer == 0){
+                SectionMgr* sectionMgr = SectionMgr::sInstance;
+                Pages::CountDownTimer* countdownTimer = sectionMgr->curSection->Get<Pages::CountDownTimer>();
+                page->ctrlMenuBottomMessage.SetMessage(countdownTimer->GetInstructionBmgId());
+                vp->vrScreenTimer = 360;
+            }
+            else if(vp->vrScreenTimer == 240){
+                page->ctrlMenuBottomMessage.SetMessage(DISPLAY_GAMEMODE_NORMAL + vp->GetGamemode());
+            }
+            else if(vp->vrScreenTimer == 120){
+                page->ctrlMenuBottomMessage.SetMessage(DISPLAY_FORCEDTRANS_OUTSIDE + vp->forcedTransmission - 1);
+            }
         }
-        else if(vp->vrScreenTimer == 180){
-            page->ctrlMenuBottomMessage.SetMessage(DISPLAY_GAMEMODE_NORMAL + vp->GetGamemode());
+        else{ 
+            if (vp->vrScreenTimer == 0){
+                SectionMgr* sectionMgr = SectionMgr::sInstance;
+                Pages::CountDownTimer* countdownTimer = sectionMgr->curSection->Get<Pages::CountDownTimer>();
+                page->ctrlMenuBottomMessage.SetMessage(countdownTimer->GetInstructionBmgId());
+                vp->vrScreenTimer = 240;
+            }
+            else if(vp->vrScreenTimer == 120){
+                page->ctrlMenuBottomMessage.SetMessage(DISPLAY_GAMEMODE_NORMAL + vp->GetGamemode());
+            }
         }
         --vp->vrScreenTimer;
     }

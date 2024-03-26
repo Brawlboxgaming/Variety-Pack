@@ -1,4 +1,3 @@
-#if false
 #include <UI/TransmissionSelect.hpp>
 
 namespace VP{
@@ -22,7 +21,7 @@ namespace UI{
     kmCall(0x8062e048, BuildTransmissionSelect); //0x57
 
     static void LoadTransmissionFromKart(Pages::Menu* menu, PageId pageId, PushButton& button){
-        if (!Pulsar::CupsConfig::IsRegsSituation()){
+        if (!Pulsar::CupsConfig::IsRegsSituation() &&  VP::System::GetTransmission() == TRANSMISSION_DEFAULT){
             pageId = static_cast<PageId>(PAGE_TRANSMISSION_SELECT);
         }
         menu->LoadNextPageById(pageId, button);
@@ -33,7 +32,7 @@ namespace UI{
     kmCall(0x80846e40, LoadTransmissionFromKart);
 
     static void LoadTransmissionFromDrift(Pages::Menu* menu, float delay){
-        if (!Pulsar::CupsConfig::IsRegsSituation()){
+        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission() == TRANSMISSION_DEFAULT){
             menu->prevPageId = static_cast<PageId>(PAGE_TRANSMISSION_SELECT);
         }
         menu->LoadPrevPageWithDelay(delay);
@@ -51,28 +50,28 @@ namespace UI{
     void TransmissionSelect::OnActivate(){
         for (int i = 0; i < this->externControlCount; i++){
             if (i == 0){
-                this->externControls[i]->SetMessage(TRANSMISSION_INSIDE);
+                this->externControls[i]->SetMessage(MENU_TRANSMISSION_INSIDE);
             }
             else if (i == 1){
-                this->externControls[i]->SetMessage(TRANSMISSION_OUTSIDE);
+                this->externControls[i]->SetMessage(MENU_TRANSMISSION_OUTSIDE);
             }
             else if (i == 2){
-                this->externControls[i]->SetMessage(TRANSMISSION_HELP);
+                this->externControls[i]->SetMessage(MENU_TRANSMISSION_HELP);
             }
         }
-        this->titleBmg = TRANSMISSION_TITLE;
+        this->titleBmg = MENU_TRANSMISSION_TITLE;
         MenuInteractable::OnActivate();
         PushButton& lastSelectedButton = *this->externControls[System::GetsInstance()->lastSelectedTransmissionId];
         this->SelectButton(lastSelectedButton);
         u32 buttonId = lastSelectedButton.buttonId;
         if (buttonId == 0){
-            this->bottomText->SetMessage(TRANSMISSION_INSIDE_BOTTOM);
+            this->bottomText->SetMessage(MENU_TRANSMISSION_INSIDE_BOTTOM);
         }
         else if(buttonId == 1){
-            this->bottomText->SetMessage(TRANSMISSION_OUTSIDE_BOTTOM);
+            this->bottomText->SetMessage(MENU_TRANSMISSION_OUTSIDE_BOTTOM);
         }
         else if(buttonId == 2){
-            this->bottomText->SetMessage(TRANSMISSION_HELP_BOTTOM);
+            this->bottomText->SetMessage(MENU_TRANSMISSION_HELP_BOTTOM);
         }
     }
 
@@ -83,20 +82,21 @@ namespace UI{
     }
 
     void TransmissionSelect::OnButtonClick(PushButton& button, u32 hudSlotId){
-        u32 playerId = RaceData::sInstance->GetPlayerIdOfLocalPlayer(hudSlotId);
         System* vp = System::GetsInstance();
         switch (button.buttonId)
         {
             case 0:
-                vp->transmissions[playerId] = INSIDE;
+                vp->transmissions[hudSlotId] = TRANSMISSION_INSIDE;
+                vp->lastSelectedTransmission = TRANSMISSION_INSIDE;
                 this->LoadNextPageById(PAGE_DRIFT_SELECT, button);
                 break;
             case 1:
-                vp->transmissions[playerId] = OUTSIDE;
+                vp->transmissions[hudSlotId] = TRANSMISSION_OUTSIDE;
+                vp->lastSelectedTransmission = TRANSMISSION_OUTSIDE;
                 this->LoadNextPageById(PAGE_DRIFT_SELECT, button);
                 break;
             case 2:
-                this->LoadMessageBoxTransparentPage(TRANSMISSION_HELP_DESC);
+                this->LoadMessageBoxTransparentPage(MENU_TRANSMISSION_HELP_DESC);
                 break;
             default:
                 break;
@@ -108,18 +108,28 @@ namespace UI{
         u32 buttonId = button.buttonId;
         
         if (buttonId == 0){
-            this->bottomText->SetMessage(TRANSMISSION_INSIDE_BOTTOM);
+            this->bottomText->SetMessage(MENU_TRANSMISSION_INSIDE_BOTTOM);
         }
         else if(buttonId == 1){
-            this->bottomText->SetMessage(TRANSMISSION_OUTSIDE_BOTTOM);
+            this->bottomText->SetMessage(MENU_TRANSMISSION_OUTSIDE_BOTTOM);
         }
         else if(buttonId == 2){
-            this->bottomText->SetMessage(TRANSMISSION_HELP_BOTTOM);
+            this->bottomText->SetMessage(MENU_TRANSMISSION_HELP_BOTTOM);
         }
     }
 
     void TransmissionSelect::OnBackPress(u32 hudSlotId){
         this->LoadPrevPageWithDelay(0.0f);
+    }
+
+    void TransmissionSelect::BeforeControlUpdate(){
+        Pulsar::UI::ExpCharacterSelect* charSelect = SectionMgr::sInstance->curSection->Get<Pulsar::UI::ExpCharacterSelect>();
+        if(charSelect->rouletteCounter != -1 && this->currentState == 0x4) {
+            this->controlsManipulatorManager.inaccessible = true;
+            Random random;
+            PushButton* randomTransmission = this->externControls[random.NextLimited(2)];
+            randomTransmission->HandleClick(0, -1);
+        }
     }
 
     static void FixVehicleModelTransition(VehicleModelControl* ctrl, PageId id){
@@ -136,4 +146,3 @@ namespace UI{
 
 } // namespace UI
 } // namespace VP
-#endif

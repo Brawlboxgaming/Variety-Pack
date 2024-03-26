@@ -1,32 +1,24 @@
-#if false
 #include <VP.hpp>
 
 namespace VP{
 namespace Race{
     static KartType GetCustomKartType(Kart::Link* link){
         if (!Pulsar::CupsConfig::IsRegsSituation()){
+            RaceData *raceData = RaceData::sInstance;
             u8 playerId = link->GetPlayerIdx();
-            PlayerType playerType = RaceData::sInstance->racesScenario.players[playerId].playerType;
+            u8 hudSlotId = raceData->GetHudSlotId(playerId);
+            PlayerType playerType = raceData->racesScenario.players[playerId].playerType;
             link->pointers->values->statsAndBsp.stats->targetAngle = 45;
-            Transmission chosenType;
-            if (playerType == PLAYER_GHOST){
-                chosenType = System::GetsInstance()->transmissions[playerId];
-            }
-            else{
-                chosenType = System::GetsInstance()->transmissions[playerId];
-            }
-            if (chosenType == OUTSIDE){
-                if (link->pointers->values->statsAndBsp.stats->type == INSIDE_BIKE){
-                    return OUTSIDE_BIKE;
-                }
-                else if (link->pointers->values->statsAndBsp.stats->type == KART){
+            u8 chosenType;
+            chosenType = System::GetsInstance()->transmissions[hudSlotId];
+            if (chosenType == TRANSMISSION_OUTSIDE){
+                if (link->pointers->values->statsAndBsp.stats->type == KART){
                     return KART;
                 }
-                else{
-                    return OUTSIDE_BIKE;
-                }
+                return OUTSIDE_BIKE;
             }
-            return INSIDE_BIKE;
+            else if(chosenType == TRANSMISSION_INSIDE) return INSIDE_BIKE;
+            return link->pointers->values->statsAndBsp.stats->type;
         }
         return link->pointers->values->statsAndBsp.stats->type;
     }
@@ -47,11 +39,11 @@ namespace Race{
     static RaceLoadHook SetCPUKartTypeHook(SetCPUKartType);
 
     static void ResetTransmissions(){
+        RaceData *raceData = RaceData::sInstance;
         for (int i = 0; i < 12; ++i){
-            System::GetsInstance()->transmissions[i] = DEFAULT;
+            System::GetsInstance()->transmissions[i] = TRANSMISSION_DEFAULT;
         }
     }
-    kmBranch(0x8052e63c, ResetTransmissions);
+    kmBranch(0x80530158, ResetTransmissions);
 } // namespace Race
 } // namespace VP
-#endif
