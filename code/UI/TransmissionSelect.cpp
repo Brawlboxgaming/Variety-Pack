@@ -26,10 +26,14 @@ namespace UI{
         }
         menu->LoadNextPageById(pageId, button);
     }
+    //Normal
     kmCall(0x80846d2c, LoadTransmissionFromKart);
     kmCall(0x80846d64, LoadTransmissionFromKart);
     kmCall(0x80846e1c, LoadTransmissionFromKart);
     kmCall(0x80846e40, LoadTransmissionFromKart);
+    //Battle
+    kmCall(0x8083aa20, LoadTransmissionFromKart);
+    kmCall(0x8083aa40, LoadTransmissionFromKart);
 
     static void LoadTransmissionFromDrift(Pages::Menu* menu, float delay){
         if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission() == TRANSMISSION_DEFAULT){
@@ -42,6 +46,7 @@ namespace UI{
     TransmissionSelect::TransmissionSelect(){
         nextPageId = PAGE_DRIFT_SELECT;
         prevPageId = PAGE_KART_SELECT;
+        if (IsBattle()) prevPageId = PAGE_BATTLE_KART_SELECT;
         onButtonClickHandler.ptmf = &TransmissionSelect::OnButtonClick;
         onButtonSelectHandler.ptmf = &TransmissionSelect::OnButtonSelect;
         onBackPressHandler.ptmf = &TransmissionSelect::OnBackPress;
