@@ -7,6 +7,7 @@ namespace Race{
             RaceData *raceData = RaceData::sInstance;
             u8 playerId = link->GetPlayerIdx();
             u8 hudSlotId = raceData->GetHudSlotId(playerId);
+            if (hudSlotId > 3) hudSlotId = playerId;
             PlayerType playerType = raceData->racesScenario.players[playerId].playerType;
             link->pointers->values->statsAndBsp.stats->targetAngle = 45;
             u8 chosenType;
