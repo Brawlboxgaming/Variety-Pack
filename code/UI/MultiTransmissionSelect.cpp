@@ -15,7 +15,7 @@ namespace UI{
     kmCall(0x8062e6b4, BuildMultiTransmissionSelect); //0x5D
 
     static void LoadMultiTransmissionFromKart(Pages::Menu* menu, PageId pageId, float delay){
-        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission()){
+        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission() == TRANSMISSION_DEFAULT){
             pageId = static_cast<PageId>(PAGE_MULTI_TRANSMISSION_SELECT);
         }
         menu->LoadNextPageWithDelayById(pageId, delay);
@@ -24,7 +24,7 @@ namespace UI{
     kmCall(0x8084a24c, LoadMultiTransmissionFromKart);
 
     static void LoadMultiTransmissionFromDrift(Pages::Menu* menu, float delay){
-        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission()){
+        if (!Pulsar::CupsConfig::IsRegsSituation() && VP::System::GetTransmission() == TRANSMISSION_DEFAULT){
             menu->prevPageId = static_cast<PageId>(PAGE_MULTI_TRANSMISSION_SELECT);
         }
         menu->LoadPrevPageWithDelay(delay);
