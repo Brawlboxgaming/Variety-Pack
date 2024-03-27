@@ -1,6 +1,7 @@
 #include <VP.hpp>
 #include <MarioKartWii/Race/RaceInfo/RaceInfo.hpp>
 #include <MarioKartWii/Kart/KartManager.hpp>
+#include <MarioKartWii/UI/Page/RaceHUD/RaceHUD.hpp>
 
 namespace VP{
 namespace Race{
@@ -14,8 +15,19 @@ static void UpdateTimer(){
             Kart::Player *player = Kart::Manager::sInstance->GetKartPlayer(playerId);
             float currentRaceCompletion = RaceInfo::sInstance->players[playerId]->raceCompletion;
             if (currentRaceCompletion <= vp->lastRaceCompletion[playerId] && RaceData::sInstance->menusScenario.settings.gamemode != MODE_TIME_TRIAL){
+                // if the race is over, we do not want them to be respawned
+                if ((RaceInfo::sInstance->players[playerId]->stateFlags & 0x2) == 0x2){
+                    vp->noRaceProgressionTimer[playerId] = 600;
+                }
+                // if someone has fallen off, we want their timer reset
+                else if((player->link.pointers->kartStatus->bitfield1 & 0x2) == 0x2){
+                    vp->noRaceProgressionTimer[i] = 1020;
+                }
                 // if someone is getting combo'd we don't want them to respawn, hence the damage check
-                if (vp->noRaceProgressionTimer[playerId] > 0 && vp->noRaceProgressionTimer[playerId] != -1 && player->link.pointers->kartDamage->currentDamage == NO_DAMAGE){
+                else if (vp->noRaceProgressionTimer[playerId] > 0
+                && vp->noRaceProgressionTimer[playerId] != -1
+                && (player->link.pointers->kartStatus->bitfield1 & 0x1) != 0x1
+                ){
                     --vp->noRaceProgressionTimer[playerId];
                 }
                 else if (vp->noRaceProgressionTimer[playerId] == 0){
