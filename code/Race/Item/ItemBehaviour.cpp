@@ -46,7 +46,7 @@ kmCall(0x80790bf4, ChangeBillOBJProperties);
 static void ChangeBlueOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
     new (dest) Item::ObjProperties(rel);
     if(System::GetGamemode() == GAMEMODE_BSS){
-        dest->limit = 20;
+        dest->limit = 30;
     }
 }
 
@@ -55,7 +55,7 @@ kmCall(0x80790b74, ChangeBlueOBJProperties);
 static void ChangeBombOBJProperties(Item::ObjProperties* dest, const Item::ObjProperties& rel){
     new (dest) Item::ObjProperties(rel);
     if(System::GetGamemode() == GAMEMODE_BBB){
-        dest->limit = 20;
+        dest->limit = 30;
     }
 }
 
