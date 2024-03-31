@@ -3,15 +3,15 @@
 namespace VP{
 namespace Race{
     static KartType GetCustomKartType(Kart::Link* link){
-        if (!Pulsar::CupsConfig::IsRegsSituation()){
-            RaceData *raceData = RaceData::sInstance;
-            u8 playerId = link->GetPlayerIdx();
-            u8 hudSlotId = raceData->GetHudSlotId(playerId);
-            if (hudSlotId > 3) hudSlotId = playerId;
+        RaceData *raceData = RaceData::sInstance;
+        u8 playerId = link->GetPlayerIdx();
+        u8 hudSlotId = raceData->GetHudSlotId(playerId);
+        if (hudSlotId > 3) hudSlotId = playerId;
+        u8 chosenType;
+        chosenType = System::GetsInstance()->transmissions[hudSlotId];
+        if (!Pulsar::CupsConfig::IsRegsSituation() && chosenType != TRANSMISSION_DEFAULT){
             PlayerType playerType = raceData->racesScenario.players[playerId].playerType;
             link->pointers->values->statsAndBsp.stats->targetAngle = 45;
-            u8 chosenType;
-            chosenType = System::GetsInstance()->transmissions[hudSlotId];
             if (chosenType == TRANSMISSION_OUTSIDE){
                 if (link->pointers->values->statsAndBsp.stats->type == KART){
                     return KART;
